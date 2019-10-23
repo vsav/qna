@@ -46,7 +46,9 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'GET #edit' do
+
     before { get :edit, params: { id: answer, question_id: question } }
+
     it 'assigns the requested answer to @answer' do
       expect(assigns(:answer)).to eq answer
     end
@@ -58,9 +60,16 @@ RSpec.describe AnswersController, type: :controller do
 
   describe 'POST #create' do
     context 'with valid attributes' do
+
+      it 'checks the question for which answer is being created' do
+        post :create, params: { question_id: question, answer: attributes_for(:answer) }
+        expect(assigns(:answer).question_id).to eq question.id
+      end
+
       it 'saves a new answer to database' do
         expect { post :create, params: { question_id: question, answer: attributes_for(:answer) } }.to change(Answer, :count).by(1)
       end
+
       it 'redirects to show view' do
         post :create, params: { question_id: question, answer: attributes_for(:answer) }
         expect(response).to redirect_to question_answers_path
@@ -68,6 +77,7 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'with invalid attributes' do
+
       it 'does not save the answer to database' do
         expect { post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) } }.to_not change(Answer, :count)
       end
@@ -81,10 +91,12 @@ RSpec.describe AnswersController, type: :controller do
 
   describe 'PATCH #update' do
     context 'with valid attributes' do
+
       it 'assigns the requested answer to @answer' do
         patch :update, params: { question_id: question, id: answer, answer: attributes_for(:answer) }
         expect(assigns(:answer)).to eq answer
       end
+
       it 'changes answer attributes' do
         patch :update, params: { question_id: question, id: answer, answer: { body: 'new body' } }
         answer.reload
@@ -98,7 +110,9 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'with invalid attributes' do
+
       before { patch :update, params: { question_id: question, id: answer, answer: attributes_for(:answer, :invalid) } }
+
       it 'does not change answer' do
         answer.reload
         expect(answer.body).to eq 'MyText'
