@@ -63,7 +63,8 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'checks the question for which answer is being created' do
         post :create, params: { question_id: question, answer: attributes_for(:answer) }
-        expect(assigns(:answer).question_id).to eq question.id
+        answer = Answer.all.order(created_at: :desc).first
+        expect(answer.question).to eq question
       end
 
       it 'saves a new answer to database' do
