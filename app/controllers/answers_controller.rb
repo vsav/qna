@@ -2,21 +2,23 @@ class AnswersController < ApplicationController
 
   before_action :find_question, only: [:index, :new, :create, :destroy]
   before_action :find_answer, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!, except: [:index, :show]
 
   def index
-    @answers = @question.answers.all
+    #@answers = @question.answers.all
   end
 
   def new
-    @answer = @question.answers.new
+    # @answer = @question.answers.new
   end
 
   def create
     @answer = @question.answers.new(answer_params)
+    @answer.author = current_user
     if @answer.save
-      redirect_to question_answers_path(@question)
+      redirect_to question_path(@question), notice: 'Answer was successfully created.'
     else
-      render :new
+      render 'questions/show'
     end
   end
 
@@ -34,7 +36,7 @@ class AnswersController < ApplicationController
 
   def destroy
     @answer.destroy
-    redirect_to question_answers_path(@question)
+    redirect_to question_answers_path(@question), notice: 'Answer was successfully deleted.'
   end
 
   private
