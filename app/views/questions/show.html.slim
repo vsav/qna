@@ -4,14 +4,13 @@ h1= @question.title
 p= @question.body
 -if user_signed_in? && @question.author == current_user
   =link_to 'Delete question', question_path(@question), method: :delete
+  =link_to 'Edit question', edit_question_path(@question)
 
 - @question.answers.each do |answer|
   -if answer.persisted?
     p= answer.body
     -if user_signed_in? && answer.author == current_user
       =link_to 'Delete answer', question_answer_path(@question, answer), method: :delete
+      =link_to 'Edit answer', edit_question_answer_path(@question, answer)
 
-= form_with model: [@question, @answer], local: true do |f|
-  = f.label :body
-  = f.text_area :body
-  = f.submit 'Create answer'
+=render 'answers/form'
