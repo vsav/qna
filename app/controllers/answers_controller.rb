@@ -1,7 +1,7 @@
 class AnswersController < ApplicationController
 
-  before_action :find_question, only: [:index, :new, :create, :destroy]
-  before_action :find_answer, only: [:show, :edit, :update, :destroy]
+  before_action :find_question, only: [:create, :edit, :update, :destroy]
+  before_action :find_answer, only: [:edit, :update, :destroy]
   before_action :authenticate_user!, except: [:index, :show]
 
   def index
