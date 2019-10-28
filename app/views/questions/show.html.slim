@@ -1,3 +1,5 @@
+= render 'shared/errors', resource: @answer
+
 h1= @question.title
 p= @question.body
 -if user_signed_in? && @question.author == current_user

@@ -3,10 +3,16 @@ require 'rails_helper'
 RSpec.describe AnswersController, type: :controller do
 
   let(:question) { create(:question) }
-  let(:answer) { create(:answer) }
+  let(:answer) { create(:answer, question: question) }
+  let(:user) { create(:user) }
+  let(:author) { create(:user) }
 
+=begin
   describe 'GET #index' do
-    let(:answers) { question create_list(:answer, 5) }
+    let(:answers) do
+      question
+      create_list(:answer, 5)
+    end
 
     before { get :index, params: { question_id: question } }
 
@@ -44,7 +50,9 @@ RSpec.describe AnswersController, type: :controller do
       expect(response).to render_template :new
     end
   end
+=end
 
+=begin
   describe 'GET #edit' do
 
     before { get :edit, params: { id: answer, question_id: question } }
@@ -57,8 +65,10 @@ RSpec.describe AnswersController, type: :controller do
       expect(response).to render_template :edit
     end
   end
+=end
 
   describe 'POST #create' do
+    before { sign_in(user) }
     context 'with valid attributes' do
 
       it 'checks the question for which answer is being created' do
@@ -73,7 +83,7 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'redirects to show view' do
         post :create, params: { question_id: question, answer: attributes_for(:answer) }
-        expect(response).to redirect_to question_answers_path
+        expect(response).to redirect_to question_path(question)
       end
     end
 
@@ -85,12 +95,13 @@ RSpec.describe AnswersController, type: :controller do
 
       it 're-renders new view' do
         post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) }
-        expect(response).to render_template :new
+        expect(response).to render_template 'questions/show'
       end
     end
   end
 
-  describe 'PATCH #update' do
+  describe 'PATCH #update as author' do
+    before { sign_in(author) }
     context 'with valid attributes' do
 
       it 'assigns the requested answer to @answer' do
@@ -126,6 +137,7 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
+    before { sign_in(author) }
     let!(:answer) { create(:answer) }
 
     it 'deletes the answer' do
