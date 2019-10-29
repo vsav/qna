@@ -2,15 +2,13 @@
 
 h1= @question.title
 p= @question.body
--if user_signed_in? && @question.author == current_user
+
+-if current_user&.is_author?(@question)
   =link_to 'Delete question', question_path(@question), method: :delete
   =link_to 'Edit question', edit_question_path(@question)
 
-- @question.answers.each do |answer|
-  -if answer.persisted?
-    p= answer.body
-    -if user_signed_in? && answer.author == current_user
-      =link_to 'Delete answer', question_answer_path(@question, answer), method: :delete
-      =link_to 'Edit answer', edit_question_answer_path(@question, answer)
-
-=render 'answers/form'
+= render @question.answers
+-if user_signed_in?
+  =render 'answers/form'
+-else
+  p= 'You need to sign in or sign up to answer the questions'
