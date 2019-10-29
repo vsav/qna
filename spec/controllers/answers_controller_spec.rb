@@ -3,78 +3,18 @@ require 'rails_helper'
 RSpec.describe AnswersController, type: :controller do
 
   let(:question) { create(:question) }
-  let(:answer) { create(:answer, question: question) }
   let(:user) { create(:user) }
-  let(:author) { create(:user) }
-
-=begin
-  describe 'GET #index' do
-    let(:answers) do
-      question
-      create_list(:answer, 5)
-    end
-
-    before { get :index, params: { question_id: question } }
-
-    it 'populates an array of all answers for @question' do
-      expect(assigns(:answers)).to match_array(question.answers)
-    end
-
-    it 'renders index view' do
-      expect(response).to render_template :index
-    end
-  end
-
-  describe 'GET #show' do
-
-    before { get :show, params: { id: answer, question_id: question } }
-
-    it 'assigns the requested answer to @answer' do
-      expect(assigns(:answer)).to eq answer
-    end
-
-    it 'renders show view' do
-      expect(response).to render_template :show
-    end
-  end
-
-  describe 'GET #new' do
-
-    before { get :new, params: { question_id: question} }
-
-    it 'assigns a new Answer to @answer' do
-      expect(assigns(:answer)).to be_a_new(Answer)
-    end
-
-    it 'renders new view' do
-      expect(response).to render_template :new
-    end
-  end
-=end
-
-=begin
-  describe 'GET #edit' do
-
-    before { get :edit, params: { id: answer, question_id: question } }
-
-    it 'assigns the requested answer to @answer' do
-      expect(assigns(:answer)).to eq answer
-    end
-
-    it 'renders edit view' do
-      expect(response).to render_template :edit
-    end
-  end
-=end
+  let(:answer) { create(:answer, question: question, user: user) }
 
   describe 'POST #create' do
     before { sign_in(user) }
     context 'with valid attributes' do
 
-      it 'checks the question for which answer is being created' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer) }
+      it 'belongs to user and belongs to question' do
+        post :create, params: { question_id: question, user: user, answer: attributes_for(:answer) }
         answer = Answer.all.order(created_at: :desc).first
         expect(answer.question).to eq question
+        expect(answer.user).to eq user
       end
 
       it 'saves a new answer to database' do
@@ -100,8 +40,15 @@ RSpec.describe AnswersController, type: :controller do
     end
   end
 
+  describe 'POST #create as guest' do
+    it 'redirects to sign_in page' do
+      post :create, params: { question_id: question, answer: attributes_for(:answer) }
+      expect(response).to redirect_to new_user_session_path
+    end
+  end
+
   describe 'PATCH #update as author' do
-    before { sign_in(author) }
+    before { sign_in(user) }
     context 'with valid attributes' do
 
       it 'assigns the requested answer to @answer' do
@@ -115,7 +62,7 @@ RSpec.describe AnswersController, type: :controller do
         expect(answer.body).to eq 'new body'
       end
 
-      it 'redirects to updated question' do
+      it 'redirects to updated answer' do
         patch :update, params: { question_id: question, id: answer, answer: attributes_for(:answer) }
         expect(response).to redirect_to question_answer_path(answer)
       end
@@ -127,7 +74,7 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'does not change answer' do
         answer.reload
-        expect(answer.body).to eq 'MyText'
+        expect(answer.body).to eq 'MyAnswerText'
       end
 
       it 're-renders edit view' do
@@ -136,9 +83,29 @@ RSpec.describe AnswersController, type: :controller do
     end
   end
 
-  describe 'DELETE #destroy' do
-    before { sign_in(author) }
-    let!(:answer) { create(:answer) }
+  describe 'PATCH #update as not author' do
+    context 'with valid attributes' do
+      it 'not changes answer attributes' do
+        user2 = create(:user)
+        sign_in(user2)
+        patch :update, params: { question_id: question, id: answer, answer: { body: 'new body' } }
+        answer.reload
+        expect(answer.body).to_not eq 'new body'
+        expect(flash[:alert]).to match('Answer was not updated')
+      end
+    end
+  end
+
+  describe 'PATCH #update as guest' do
+    it 'redirects to sign_in page' do
+      patch :update, params: { question_id: question, id: answer, answer: { body: 'new body' } }
+      expect(response).to redirect_to new_user_session_path
+    end
+  end
+
+  describe 'DELETE #destroy as author' do
+    before { sign_in(user) }
+    let!(:answer) { create(:answer, question: question, user: user) }
 
     it 'deletes the answer' do
       expect { delete :destroy, params: { question_id: question, id: answer } }.to change(Answer, :count).by(-1)
@@ -147,6 +114,24 @@ RSpec.describe AnswersController, type: :controller do
     it 'redirects to index' do
       delete :destroy, params: { question_id: question, id: answer }
       expect(response).to redirect_to question_answers_path
+    end
+  end
+
+  describe 'DELETE #destroy as not author' do
+    let(:user2) { create(:user) }
+    let!(:answer) { create(:answer, user: user2) }
+
+    it 'do not deletes the answer' do
+      sign_in(user)
+      expect { delete :destroy, params: { question_id: question, id: answer } }.to change(Answer, :count).by(0)
+      expect(flash[:alert]).to match('You do not have permission to do that')
+    end
+  end
+
+  describe 'DELETE #destroy as guest' do
+    it 'redirects to sign_in page' do
+      delete :destroy, params: { question_id: question, id: answer }
+      expect(response).to redirect_to new_user_session_path
     end
   end
 end
