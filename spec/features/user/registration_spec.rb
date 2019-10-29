@@ -23,4 +23,14 @@ feature 'Guest can register', %q{
 
     expect(page).to have_content "Email can't be blank"
   end
+
+  scenario 'Guest trying to register with taken email' do
+    user = create(:user)
+    fill_in 'Email', with: user.email
+    fill_in 'Password', with: 'secret'
+    fill_in 'Password confirmation', with: 'secret'
+    click_on 'Sign up'
+
+    expect(page).to have_content 'Email has already been taken'
+  end
 end
