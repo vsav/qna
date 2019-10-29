@@ -4,19 +4,11 @@ class AnswersController < ApplicationController
   before_action :find_answer, only: [:edit, :update, :destroy]
   before_action :authenticate_user!, except: [:index, :show]
 
-  def index
-    #@answers = @question.answers.all
-  end
-
-  def new
-    # @answer = @question.answers.new
-  end
-
   def create
     @answer = @question.answers.new(answer_params)
-    @answer.author = current_user
+    @answer.user = current_user
     if @answer.save
-      redirect_to question_path(@question), notice: 'Answer was successfully created.'
+      redirect_to @question, notice: 'Answer was successfully created.'
     else
       render 'questions/show'
     end
@@ -27,16 +19,21 @@ class AnswersController < ApplicationController
   def edit; end
 
   def update
-    if @answer.update(answer_params)
-      redirect_to question_answer_path(@answer)
+    if current_user.is_author?(@answer) && @answer.update(answer_params)
+      redirect_to question_answer_path(@answer), notice: 'Answer was successfully updated.'
     else
+      flash[:alert] = 'Answer was not updated'
       render :edit
     end
   end
 
   def destroy
-    @answer.destroy
-    redirect_to question_answers_path(@question), notice: 'Answer was successfully deleted.'
+    if current_user.is_author?(@answer)
+      @answer.destroy
+      redirect_to question_answers_path(@question), notice: 'Answer was successfully deleted.'
+    else
+      flash[:alert] = 'You do not have permission to do that'
+    end
   end
 
   private
@@ -52,5 +49,7 @@ class AnswersController < ApplicationController
   def answer_params
     params.require(:answer).permit(:body)
   end
+
+
 
 end
