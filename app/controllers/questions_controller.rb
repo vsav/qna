@@ -17,7 +17,7 @@ class QuestionsController < ApplicationController
 
   def create
     @question = Question.new(question_params)
-    @question.author = current_user
+    @question.user = current_user
     if @question.save
       redirect_to @question, notice: 'Your question successfully created.'
     else
@@ -28,16 +28,21 @@ class QuestionsController < ApplicationController
   def edit; end
 
   def update
-    if @question.update(question_params)
-      redirect_to @question
+    if current_user.is_author?(@question) && @question.update(question_params)
+      redirect_to @question, notice: 'Question was successfully updated.'
     else
+      flash[:alert] = 'Question was not updated.'
       render :edit
     end
   end
 
   def destroy
-    @question.destroy
-    redirect_to questions_path, notice: 'Question was successfully deleted.'
+    if current_user.is_author?(@question)
+      @question.destroy
+      redirect_to questions_path, notice: 'Question was successfully deleted.'
+    else
+      flash[:alert] = 'You do not have permission to do that'
+    end
   end
 
   private
