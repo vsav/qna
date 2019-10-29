@@ -7,21 +7,26 @@ feature 'User can edit own question', %q{
 } do
   describe 'Authenticated user' do
     given(:user) { create(:user) }
-    given(:author) { create(:user) }
-    given(:question) { create(:question, author: author) }
+    given(:question) { create(:question, user: user) }
 
     scenario 'author trying to edit own question' do
-      sign_in(author)
+      sign_in(user)
       visit question_path(question)
       click_on 'Edit question'
       expect(page).to have_field('Title', with: question.title)
       expect(page).to have_field('Body', with: question.body)
+      fill_in 'Title', with: 'Another title'
+      click_on 'Ask question'
+      expect(page).to have_content 'Question was successfully updated.'
     end
 
     scenario 'user trying to edit other users question' do
-      sign_in(user)
+      user2 = create(:user)
+      sign_in(user2)
+      puts user2
+      puts question.user
       visit question_path(question)
-      expect(page).to_not have_content 'Edit question'
+      expect(page).to_not have_link 'Edit question'
     end
   end
 
@@ -29,7 +34,7 @@ feature 'User can edit own question', %q{
     given(:question) { create(:question) }
     scenario 'trying to edit question' do
       visit question_path(question)
-      expect(page).to_not have_content 'Edit question'
+      expect(page).to_not have_link 'Edit question'
     end
   end
 end
