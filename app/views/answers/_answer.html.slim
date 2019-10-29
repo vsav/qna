@@ -1,0 +1,5 @@
+-if answer.id
+  p= answer.body
+  -if current_user&.is_author?(answer)
+    =link_to 'Delete answer', question_answer_path(@question, answer), method: :delete
+    =link_to 'Edit answer', edit_question_answer_path(@question, answer)
