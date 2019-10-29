@@ -6,7 +6,7 @@ feature 'User can see questions and answers for them', %q{
   I'd like to be able to see the answers for questions
 } do
     given(:user) { create(:user) }
-    given(:question) { create(:question) }
+    given(:question) { create(:question, user: user) }
     given(:answers) { create_list(:answer, 3, question) }
 
   describe 'Authenticated user' do
