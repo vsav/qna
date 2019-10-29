@@ -7,21 +7,22 @@ feature 'User can delete own question', %q{
 } do
   describe 'Authenticated user' do
     given(:user) { create(:user) }
-    given(:author) { create(:user) }
-    given(:question) { create(:question, author: author) }
+    given(:question) { create(:question, user: user) }
 
     scenario 'author trying to delete own question' do
-      sign_in(author)
+      sign_in(user)
       visit question_path(question)
+      expect(page).to have_content question.title
       click_on 'Delete question'
       expect(page).to have_content 'Question was successfully deleted.'
       expect(page).to_not have_content question.title
     end
 
     scenario 'user trying to delete other users question' do
-      sign_in(user)
+      user2 = create(:user)
+      sign_in(user2)
       visit question_path(question)
-      expect(page).to_not have_content 'Delete question'
+      expect(page).to_not have_link 'Delete question'
     end
   end
 
@@ -29,9 +30,7 @@ feature 'User can delete own question', %q{
     given(:question) { create(:question) }
     scenario 'trying to delete question' do
       visit question_path(question)
-      expect(page).to_not have_content 'Delete question'
+      expect(page).to_not have_link 'Delete question'
     end
   end
-
-
 end
