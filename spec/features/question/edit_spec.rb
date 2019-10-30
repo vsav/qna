@@ -7,6 +7,7 @@ feature 'User can edit own question', %q{
 } do
   describe 'Authenticated user' do
     given(:user) { create(:user) }
+    given(:user2) { create(:user) }
     given(:question) { create(:question, user: user) }
 
     scenario 'author trying to edit own question' do
@@ -20,11 +21,17 @@ feature 'User can edit own question', %q{
       expect(page).to have_content 'Question was successfully updated.'
     end
 
+    scenario 'author trying to edit own question with invalid params' do
+      sign_in(user)
+      visit question_path(question)
+      click_on 'Edit question'
+      fill_in 'Title', with: ''
+      click_on 'Ask question'
+      expect(page).to have_content "Title can't be blank"
+    end
+
     scenario 'user trying to edit other users question' do
-      user2 = create(:user)
       sign_in(user2)
-      puts user2
-      puts question.user
       visit question_path(question)
       expect(page).to_not have_link 'Edit question'
     end
