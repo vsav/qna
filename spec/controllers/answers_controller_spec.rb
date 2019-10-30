@@ -53,8 +53,6 @@ RSpec.describe AnswersController, type: :controller do
     end
   end
 
-
-
   describe 'PATCH #update' do
 
     context 'as author with valid attributes' do
@@ -141,32 +139,29 @@ RSpec.describe AnswersController, type: :controller do
         expect(response).to redirect_to question_answers_path
       end
     end
-  end
+    context 'as not author' do
 
-  context 'as not author' do
+      let!(:answer) { create(:answer, question: question, user: user2) }
 
-    let!(:answer) { create(:answer, user: user2) }
-
-    it 'do not deletes the answer' do
-      sign_in(user)
-      expect { delete :destroy, params: { question_id: question, id: answer } }.to_not change(Answer, :count)
-      expect(flash[:alert]).to match('You do not have permission to do that')
+      it 'do not deletes the answer' do
+        sign_in(user)
+        expect { delete :destroy, params: { question_id: question, id: answer } }.to_not change(Answer, :count)
+        expect(flash[:alert]).to match('You do not have permission to do that')
+      end
     end
 
-  end
+    context 'as guest' do
+      let!(:answer) { create(:answer, question: question) }
 
-  context 'as guest' do
-    let!(:answer) { create(:answer) }
+      it 'redirects to sign_in page' do
+        delete :destroy, params: { question_id: question, id: answer }
+        expect(response).to redirect_to new_user_session_path
+      end
 
-    it 'redirects to sign_in page' do
-      delete :destroy, params: { question_id: question, id: answer }
-      expect(response).to redirect_to new_user_session_path
+      it 'do not deletes the answer' do
+        expect { delete :destroy, params: { question_id: question, id: answer } }.to_not change(Answer, :count)
+      end
     end
-
-    it 'do not deletes the answer' do
-      expect { delete :destroy, params: { question_id: question, id: answer } }.to_not change(Answer, :count)
-    end
-
   end
 end
 
