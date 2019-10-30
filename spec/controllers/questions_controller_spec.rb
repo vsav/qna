@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
   let(:user) { create(:user) }
+  let(:user2) { create(:user) }
   let(:question) { create(:question, user: user) }
 
   describe 'GET #index' do
@@ -59,8 +60,10 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'POST #create' do
-    before { login(user) }
+
     context 'with valid attributes' do
+
+      before { login(user) }
 
       it 'saves a new question to database' do
         expect { post :create, params: { question: attributes_for(:question) } }.to change(Question, :count).by(1)
@@ -73,12 +76,14 @@ RSpec.describe QuestionsController, type: :controller do
 
       it 'question belongs to user' do
         post :create, params: { question: attributes_for(:question) }
-        question = Question.all.order(created_at: :desc).first
+        question = Question.order(created_at: :desc).first
         expect(question.user).to eq user
       end
     end
 
     context 'with invalid attributes' do
+
+      before { login(user) }
 
       it 'does not save the question to database' do
         expect { post :create, params: { question: attributes_for(:question, :invalid) } }.to_not change(Question, :count)
@@ -89,18 +94,25 @@ RSpec.describe QuestionsController, type: :controller do
         expect(response).to render_template :new
       end
     end
-  end
 
-  describe 'POST #create as guest' do
-    it 'redirects to sign_in page' do
-      post :create, params: { question: attributes_for(:question) }
-      expect(response).to redirect_to new_user_session_path
+    context 'as guest' do
+
+      it 'redirects to sign_in page' do
+        post :create, params: { question: attributes_for(:question) }
+        expect(response).to redirect_to new_user_session_path
+      end
+
+      it 'does not save the question to database' do
+        expect { post :create, params: { question: attributes_for(:question) } }.to_not change(Question, :count)
+      end
     end
   end
 
-  describe 'PATCH #update as author' do
-    before { login(user) }
-    context 'with valid attributes' do
+
+  describe 'PATCH #update' do
+
+    context 'as author with valid attributes' do
+      before { login(user) }
 
       it 'assigns the requested question to @question' do
         patch :update, params: { id: question, question: attributes_for(:question) }
@@ -120,9 +132,12 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
 
-    context 'with invalid attributes' do
+    context 'as author with invalid attributes' do
 
-      before { patch :update, params: { id: question, question: attributes_for(:question, :invalid) } }
+      before do
+        login(user)
+        patch :update, params: { id: question, question: attributes_for(:question, :invalid) }
+      end
 
       it 'does not change question' do
         question.reload
@@ -134,52 +149,67 @@ RSpec.describe QuestionsController, type: :controller do
         expect(response).to render_template :edit
       end
     end
-  end
 
-  describe 'PATCH #update as not author' do
-    context 'with valid attributes' do
-      it 'not changes question attributes' do
-        user2 = create(:user)
-        sign_in(user2)
+    context 'as not author with valid attributes' do
+
+      before do
+        login(user2)
         patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }
+      end
+
+      it 'not changes question attributes' do
         question.reload
         expect(question.title).to_not eq 'new title'
         expect(question.body).to_not eq 'new body'
         expect(flash[:alert]).to match('Question was not updated')
       end
+
+      it 're-renders edit view' do
+        expect(response).to render_template :edit
+      end
+    end
+
+    context 'as guest' do
+
+      before { patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } } }
+
+      it 'redirects to sign_in page' do
+        post :create, params: { question: attributes_for(:question) }
+        expect(response).to redirect_to new_user_session_path
+      end
+
+      it 'not changes question attributes' do
+        question.reload
+        expect(question.title).to_not eq 'new title'
+        expect(question.body).to_not eq 'new body'
+      end
     end
   end
 
-  describe 'PATCH #update as guest' do
-    it 'redirects to sign_in page' do
-      post :create, params: { question: attributes_for(:question) }
-      expect(response).to redirect_to new_user_session_path
-    end
-  end
-
-  describe 'DELETE #destroy as author' do
+  describe 'DELETE #destroy' do
     before { login(user) }
-    let!(:question) { create(:question, user: user) }
+    context  'as author' do
 
-    it 'deletes the question' do
-      expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(-1)
+      let!(:question) { create(:question, user: user) }
+
+      it 'deletes the question' do
+        expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(-1)
+      end
+
+      it 'redirects to index' do
+        delete :destroy, params: { id: question }
+        expect(response).to redirect_to questions_path
+      end
     end
 
-    it 'redirects to index' do
-      delete :destroy, params: { id: question }
-      expect(response).to redirect_to questions_path
+    context 'as not author' do
+
+      let!(:question) { create(:question, user: user2) }
+
+      it 'do not deletes the answer' do
+        expect { delete :destroy, params: { id: question } }.to_not change(Question, :count)
+        expect(flash[:alert]).to match('You do not have permission to do that')
+      end
     end
   end
-
-  describe 'DELETE #destroy as not author' do
-    let(:user2) { create(:user) }
-    let!(:question) { create(:question, user: user2) }
-
-    it 'do not deletes the answer' do
-      sign_in(user)
-      expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(0)
-      expect(flash[:alert]).to match('You do not have permission to do that')
-    end
-  end
-
 end
