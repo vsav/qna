@@ -5,7 +5,8 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
 
   def create
-    @answer = @question.answers.new(answer_params)
+    @answer = Answer.new(answer_params)
+    @answer.question_id = @question.id
     @answer.user = current_user
     if @answer.save
       redirect_to @question, notice: 'Answer was successfully created.'
