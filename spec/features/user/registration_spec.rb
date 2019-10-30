@@ -6,6 +6,8 @@ feature 'Guest can register', %q{
   I'd like to be able to register
 } do
 
+  let(:user) { create(:user) }
+
   before { visit new_user_registration_path }
 
   scenario 'Guest trying to register' do
@@ -25,7 +27,6 @@ feature 'Guest can register', %q{
   end
 
   scenario 'Guest trying to register with taken email' do
-    user = create(:user)
     fill_in 'Email', with: user.email
     fill_in 'Password', with: 'secret'
     fill_in 'Password confirmation', with: 'secret'
