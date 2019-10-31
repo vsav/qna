@@ -42,6 +42,7 @@ class QuestionsController < ApplicationController
       redirect_to questions_path, notice: 'Question was successfully deleted.'
     else
       flash[:alert] = 'You do not have permission to do that'
+      render :show
     end
   end
 
