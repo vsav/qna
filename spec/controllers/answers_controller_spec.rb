@@ -68,9 +68,9 @@ RSpec.describe AnswersController, type: :controller do
         expect(answer.body).to eq 'new body'
       end
 
-      it 'redirects to updated answer' do
+      it 'redirects to question for updated answer' do
         patch :update, params: { question_id: question, id: answer, answer: attributes_for(:answer) }
-        expect(response).to redirect_to question_answer_path(answer)
+        expect(response).to redirect_to question_path(question)
       end
     end
 
@@ -126,9 +126,9 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
+    let!(:answer) { create(:answer, question: question, user: user) }
     context 'as author' do
       before { sign_in(user) }
-      let!(:answer) { create(:answer, question: question, user: user) }
 
       it 'deletes the answer' do
         expect { delete :destroy, params: { question_id: question, id: answer } }.to change(Answer, :count).by(-1)
@@ -136,22 +136,25 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'redirects to index' do
         delete :destroy, params: { question_id: question, id: answer }
-        expect(response).to redirect_to question_answers_path
+        expect(response).to redirect_to question_path(question)
       end
     end
-    context 'as not author' do
 
-      let!(:answer) { create(:answer, question: question, user: user2) }
+    context 'as not author' do
+      before { sign_in(user2) }
 
       it 'do not deletes the answer' do
-        sign_in(user)
         expect { delete :destroy, params: { question_id: question, id: answer } }.to_not change(Answer, :count)
         expect(flash[:alert]).to match('You do not have permission to do that')
+      end
+
+      it 're-renders question page' do
+        delete :destroy, params: { question_id: question, id: answer }
+        expect(response).to render_template 'questions/show'
       end
     end
 
     context 'as guest' do
-      let!(:answer) { create(:answer, question: question) }
 
       it 'redirects to sign_in page' do
         delete :destroy, params: { question_id: question, id: answer }
