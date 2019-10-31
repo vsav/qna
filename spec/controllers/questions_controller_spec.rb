@@ -187,10 +187,10 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    before { login(user) }
-    context  'as author' do
+    let!(:question) { create(:question, user: user) }
 
-      let!(:question) { create(:question, user: user) }
+    context  'as author' do
+      before { login(user) }
 
       it 'deletes the question' do
         expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(-1)
@@ -203,12 +203,28 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'as not author' do
+      before { login(user2) }
 
-      let!(:question) { create(:question, user: user2) }
+      it 'do not deletes the question' do
+        expect { delete :destroy, params: { id: question } }.to_not change(Question, :count)
+        expect(flash[:alert]).to match('You do not have permission to do that')
+      end
+
+      it 're-renders show view' do
+        delete :destroy, params: { id: question }
+        expect(response).to render_template :show
+      end
+    end
+
+    context 'as guest' do
+
+      it 'redirects to sign_in page' do
+        delete :destroy, params: { id: question }
+        expect(response).to redirect_to new_user_session_path
+      end
 
       it 'do not deletes the answer' do
         expect { delete :destroy, params: { id: question } }.to_not change(Question, :count)
-        expect(flash[:alert]).to match('You do not have permission to do that')
       end
     end
   end
