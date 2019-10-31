@@ -1,6 +1,6 @@
 class AnswersController < ApplicationController
 
-  before_action :find_question, only: [:create, :edit, :update, :destroy]
+  before_action :find_question, only: [:create, :edit, :update]
   before_action :find_answer, only: [:edit, :update, :destroy]
   before_action :authenticate_user!, except: [:index, :show]
 
@@ -21,7 +21,7 @@ class AnswersController < ApplicationController
 
   def update
     if current_user.is_author?(@answer) && @answer.update(answer_params)
-      redirect_to question_answer_path(@answer), notice: 'Answer was successfully updated.'
+      redirect_to @answer.question, notice: 'Answer was successfully updated.'
     else
       flash[:alert] = 'Answer was not updated'
       render :edit
@@ -31,9 +31,10 @@ class AnswersController < ApplicationController
   def destroy
     if current_user.is_author?(@answer)
       @answer.destroy
-      redirect_to question_answers_path(@question), notice: 'Answer was successfully deleted.'
+      redirect_to @answer.question, notice: 'Answer was successfully deleted.'
     else
       flash[:alert] = 'You do not have permission to do that'
+      render 'questions/show'
     end
   end
 
