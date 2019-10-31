@@ -15,25 +15,25 @@ RSpec.describe User, type: :model do
 
     context 'user is question author' do
       it 'should return true' do
-        expect(user).to eq question.user
+        expect(user).to be_is_author(question)
       end
     end
 
     context 'user is not question author' do
       it 'should return true' do
-        expect(user2).to_not eq question.user
+        expect(user2).to_not be_is_author(question)
       end
     end
 
     context 'user is answer author' do
       it 'should return true' do
-        expect(user).to eq answer.user
+        expect(user).to be_is_author(answer)
       end
     end
 
     context 'user is not answer author' do
       it 'should return true' do
-        expect(user2).to_not eq answer.user
+        expect(user2).to_not be_is_author(answer)
       end
     end
 
