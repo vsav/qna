@@ -18,6 +18,7 @@ feature 'Edit answer', %q{
       fill_in 'Body', with: 'Another text'
       click_on 'Create answer'
       expect(page).to have_content 'Answer was successfully updated.'
+      expect(page).to have_content 'Another text'
     end
 
     scenario 'edit own answer with invalid params' do
