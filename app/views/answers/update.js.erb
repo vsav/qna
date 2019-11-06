@@ -1,0 +1,10 @@
+var answerId = <%= @answer.id %>
+var answerErrors = 'p#answer-' + answerId + '-errors'
+$(answerErrors).html('<%= render 'shared/errors', resource: @answer %>');
+<% unless @answer.errors.present? %>
+  $('.notice').html('');
+  $('#answer-' + answerId + '-body').html('<%= j @answer.body %>');
+  $('.edit-answer-link').show();
+  $('form#edit-answer-' + answerId).addClass('hidden');
+  $('.notice').append('Answer was successfully updated.');
+<% end %>
