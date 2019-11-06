@@ -12,31 +12,31 @@ RSpec.describe AnswersController, type: :controller do
     context 'with valid attributes' do
       before { sign_in(user) }
       it 'belongs to user and belongs to question' do
-        post :create, params: { question_id: question, user: user, answer: attributes_for(:answer) }
+        post :create, params: { question_id: question, user: user, answer: attributes_for(:answer), format: :js }
         answer = Answer.all.order(created_at: :desc).first
         expect(answer.question).to eq question
         expect(answer.user).to eq user
       end
 
       it 'saves a new answer to database' do
-        expect { post :create, params: { question_id: question, answer: attributes_for(:answer) } }.to change(Answer, :count).by(1)
+        expect { post :create, params: { question_id: question, answer: attributes_for(:answer) }, format: :js }.to change(Answer, :count).by(1)
       end
 
-      it 'redirects to show view' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer) }
-        expect(response).to redirect_to question_path(question)
+      it 'renders create template' do
+        post :create, params: { question_id: question, answer: attributes_for(:answer), format: :js }
+        expect(response).to render_template :create
       end
     end
 
     context 'with invalid attributes' do
       before { sign_in(user) }
       it 'does not save the answer to database' do
-        expect { post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) } }.to_not change(Answer, :count)
+        expect { post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) }, format: :js }.to_not change(Answer, :count)
       end
 
-      it 're-renders new view' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) }
-        expect(response).to render_template 'questions/show'
+      it 'renders create template' do
+        post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid), format: :js }
+        expect(response).to render_template :create
       end
     end
 
@@ -58,19 +58,19 @@ RSpec.describe AnswersController, type: :controller do
     context 'as author with valid attributes' do
       before { sign_in(user) }
       it 'assigns the requested answer to @answer' do
-        patch :update, params: { question_id: question, id: answer, answer: attributes_for(:answer) }
+        patch :update, params: { question_id: question, id: answer, answer: attributes_for(:answer), format: :js }
         expect(assigns(:answer)).to eq answer
       end
 
       it 'changes answer attributes' do
-        patch :update, params: { question_id: question, id: answer, answer: { body: 'new body' } }
+        patch :update, params: { question_id: question, id: answer, answer: { body: 'new body' }, format: :js }
         answer.reload
         expect(answer.body).to eq 'new body'
       end
 
-      it 'redirects to question for updated answer' do
-        patch :update, params: { question_id: question, id: answer, answer: attributes_for(:answer) }
-        expect(response).to redirect_to question_path(question)
+      it 'renders update view' do
+        patch :update, params: { question_id: question, id: answer, answer: { body: 'new body' }, format: :js }
+        expect(response).to render_template :update
       end
     end
 
@@ -78,17 +78,16 @@ RSpec.describe AnswersController, type: :controller do
 
       before do
         sign_in(user)
-        patch :update, params: { question_id: question, id: answer, answer: attributes_for(:answer, :invalid) }
+        patch :update, params: { question_id: question, id: answer, answer: attributes_for(:answer, :invalid), format: :js }
       end
 
       it 'does not change answer' do
         answer.reload
         expect(answer.body).to eq 'MyAnswerText'
-        expect(flash[:alert]).to match('Answer was not updated')
       end
 
-      it 're-renders edit view' do
-        expect(response).to render_template :edit
+      it 'renders update view' do
+        expect(response).to render_template :update
       end
     end
 
@@ -96,26 +95,25 @@ RSpec.describe AnswersController, type: :controller do
 
       before do
         sign_in(user2)
-        patch :update, params: { question_id: question, id: answer, answer: { body: 'new body' } }
+        patch :update, params: { question_id: question, id: answer, answer: { body: 'new body' }, format: :js }
       end
 
       it 'not changes answer attributes' do
         answer.reload
         expect(answer.body).to_not eq 'new body'
-        expect(flash[:alert]).to match('Answer was not updated')
       end
 
-      it 're-renders edit view' do
-        expect(response).to render_template :edit
+      it 'renders redirects to root path' do
+        expect(response).to redirect_to root_path
       end
     end
 
     context 'as guest' do
 
-      before { patch :update, params: { question_id: question, id: answer, answer: { body: 'new body' } } }
+      before { patch :update, params: { question_id: question, id: answer, answer: { body: 'new body' } }, format: :js }
 
-      it 'redirects to sign_in page' do
-        expect(response).to redirect_to new_user_session_path
+      it 'returns status 401: unauthorized' do
+        expect(response).to have_http_status(401)
       end
 
       it 'not changes answer attributes' do
@@ -131,12 +129,12 @@ RSpec.describe AnswersController, type: :controller do
       before { sign_in(user) }
 
       it 'deletes the answer' do
-        expect { delete :destroy, params: { question_id: question, id: answer } }.to change(Answer, :count).by(-1)
+        expect { delete :destroy, params: { question_id: question, id: answer }, format: :js }.to change(Answer, :count).by(-1)
       end
 
-      it 'redirects to index' do
-        delete :destroy, params: { question_id: question, id: answer }
-        expect(response).to redirect_to question_path(question)
+      it 'renders destroy template' do
+        delete :destroy, params: { question_id: question, id: answer }, format: :js
+        expect(response).to render_template :destroy
       end
     end
 
@@ -144,25 +142,24 @@ RSpec.describe AnswersController, type: :controller do
       before { sign_in(user2) }
 
       it 'do not deletes the answer' do
-        expect { delete :destroy, params: { question_id: question, id: answer } }.to_not change(Answer, :count)
-        expect(flash[:alert]).to match('You do not have permission to do that')
+        expect { delete :destroy, params: { question_id: question, id: answer }, format: :js }.to_not change(Answer, :count)
       end
 
-      it 're-renders question page' do
-        delete :destroy, params: { question_id: question, id: answer }
-        expect(response).to render_template 'questions/show'
+      it 'redirects to root path' do
+        delete :destroy, params: { question_id: question, id: answer }, format: :js
+        expect(response).to redirect_to root_path
       end
     end
 
     context 'as guest' do
 
-      it 'redirects to sign_in page' do
-        delete :destroy, params: { question_id: question, id: answer }
-        expect(response).to redirect_to new_user_session_path
+      it 'returns status 401: unauthorized' do
+        delete :destroy, params: { question_id: question, id: answer }, format: :js
+        expect(response).to have_http_status(401)
       end
 
       it 'do not deletes the answer' do
-        expect { delete :destroy, params: { question_id: question, id: answer } }.to_not change(Answer, :count)
+        expect { delete :destroy, params: { question_id: question, id: answer }, format: :js }.to_not change(Answer, :count)
       end
     end
   end
