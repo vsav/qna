@@ -1,4 +1,13 @@
-p= answer.body
--if current_user&.is_author?(answer)
-  =link_to 'Delete answer', question_answer_path(@question, answer), method: :delete
-  =link_to 'Edit answer', edit_question_answer_path(@question, answer)
+= content_tag(:div, id: "answer-#{ answer.id }")
+  p id = "answer-#{ answer.id }-errors"
+    = render 'shared/errors', resource: @answer
+  p id = "answer-#{ answer.id }-body"
+    = answer.body
+  -if current_user&.is_author?(answer)
+    = form_with model: answer, class: 'hidden', html: {id: "edit-answer-#{answer.id}"} do |f|
+      = f.label :body
+      = f.text_area :body
+      = f.submit 'Save'
+
+    =link_to 'Delete answer | ', answer_path(answer), method: :delete, data: {answer_id: answer.id}, remote: true
+    =link_to 'Edit answer', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
