@@ -1,0 +1,7 @@
+$('.new-answer-errors').html('<%= render 'shared/errors', resource: @answer %>');
+<% if @answer.persisted? %>
+  $('.notice').html('');
+  $('.answers').append('<%= j render @answer %>');
+  $('.new-answer-form #answer_body').val('');
+  $('.notice').append('Answer was successfully created.');
+<% end %>
