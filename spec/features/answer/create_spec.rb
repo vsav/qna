@@ -4,7 +4,7 @@ feature 'Authenticated can answer the questions', %q{
   In order to help someone from a community
   As an authenticated user
   I'd like to be able to answer the questions
-} do
+}, js: true do
   given(:user) { create(:user) }
   given(:question) { create(:question, user: user) }
   given(:answer) { create(:answer, question: question, user: user) }

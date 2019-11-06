@@ -3,7 +3,7 @@ feature 'Delete answer', %q{
   In order to remove my answer
   As an authenticated user
   I'd like to be able to delete answer
-} do
+}, js: true do
 
   given(:user) { create(:user) }
   given(:question) { create(:question, user: user) }
