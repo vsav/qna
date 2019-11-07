@@ -5,10 +5,8 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
 
   def create
-    @answer = Answer.new(answer_params)
-    @answer.question = @question
-    @answer.user = current_user
-    @answer.save
+    @answer = Answer.create(answer_params.merge(question: @question,
+                                                user: current_user))
   end
 
   def show; end
@@ -34,8 +32,8 @@ class AnswersController < ApplicationController
 
   def set_best
     @question = @answer.question
-    if current_user.is_author?(@answer)
-      @answer.mark_best
+    if current_user.is_author?(@question)
+      @answer.mark_best!
     else
       redirect_to root_path
     end
