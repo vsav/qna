@@ -1,7 +1,7 @@
 var answerId = <%= @answer.id %>
 var answerErrors = 'p#answer-' + answerId + '-errors'
 $(answerErrors).html('<%= render 'shared/errors', resource: @answer %>');
-<% unless @answer.errors.present? %>
+<% if @answer.errors.blank? %>
   $('.notice').html('');
   $('#answer-' + answerId + '-body').html('<%= j @answer.body %>');
   $('.edit-answer-link').show();
