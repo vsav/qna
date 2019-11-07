@@ -13,7 +13,7 @@ RSpec.describe AnswersController, type: :controller do
       before { sign_in(user) }
       it 'belongs to user and belongs to question' do
         post :create, params: { question_id: question, user: user, answer: attributes_for(:answer), format: :js }
-        answer = Answer.all.order(created_at: :desc).first
+        answer = Answer.order(created_at: :desc).first
         expect(answer.question).to eq question
         expect(answer.user).to eq user
       end
