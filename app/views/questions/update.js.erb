@@ -1,0 +1,11 @@
+var questionId = <%= @question.id %>
+var questionErrors = 'p#question-' + questionId + '-errors'
+$(questionErrors).html('<%= render 'shared/errors', resource: @question %>');
+<% unless @question.errors.present? %>
+  $('.notice').html('');
+  $('#question-' + questionId + '-title').html('<%= j @question.title %>');
+  $('#question-' + questionId + '-body').html('<%= j @question.body %>');
+  $('.edit-question-link').show();
+  $('form#edit-question-' + questionId).addClass('hidden');
+  $('.notice').append('Question was successfully updated.');
+<% end %>
