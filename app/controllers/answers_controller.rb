@@ -1,7 +1,7 @@
 class AnswersController < ApplicationController
 
   before_action :find_question, only: [:create]
-  before_action :find_answer, only: [:update, :destroy]
+  before_action :find_answer, only: [:update, :destroy, :set_best]
   before_action :authenticate_user!, except: [:index, :show]
 
   def create
@@ -27,6 +27,15 @@ class AnswersController < ApplicationController
   def destroy
     if current_user.is_author?(@answer)
       @answer.destroy
+    else
+      redirect_to root_path
+    end
+  end
+
+  def set_best
+    @question = @answer.question
+    if current_user.is_author?(@answer)
+      @answer.mark_best
     else
       redirect_to root_path
     end
