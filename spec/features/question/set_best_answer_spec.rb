@@ -20,9 +20,6 @@ feature 'User can mark answer for own question as best', %q{
       visit question_path(question)
 
       within '.answers' do
-        expect(answer1.best).to be_falsey
-        expect(answer2.best).to be_truthy
-        expect(answer3.best).to be_falsey
         expect(page).to have_link(href: "/answers/#{answer1.id}/set_best")
         expect(page).to_not have_link(href: "/answers/#{answer2.id}/set_best")
         expect(page).to have_link(href: "/answers/#{answer3.id}/set_best")
@@ -33,7 +30,6 @@ feature 'User can mark answer for own question as best', %q{
       sign_in(user)
       visit question_path(question)
       top_answer = question.answers.first
-      expect(top_answer.best).to be_truthy
       expect(page).to have_link(href: "/answers/#{answer3.id}/set_best")
       find("a[href = '/answers/#{answer3.id}/set_best']").click
       visit question_path(question)
@@ -48,16 +44,12 @@ feature 'User can mark answer for own question as best', %q{
       within "#answer-#{answer1.id}" do
         expect(page).to have_link(href: "/answers/#{answer1.id}/set_best")
         find("a[href = '/answers/#{answer1.id}/set_best']").click
-        sleep 1 #wait_for_ajax не работает...
-        answer1.reload
-        expect(answer1.best).to be_truthy
+
         expect(page).to_not have_link(href: "/answers/#{answer1.id}/set_best")
       end
 
       within "#answer-#{answer2.id}" do
-        answer2.reload
         expect(page).to have_link(href: "/answers/#{answer2.id}/set_best")
-        expect(answer2.best).to be_falsey
       end
     end
 
