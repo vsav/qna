@@ -4,7 +4,7 @@ feature 'User can edit own question', %q{
   In order to edit my question for some reason
   As a question's author
   I'd like to be able to edit my question
-} do
+}, js: true do
 
   given(:user) { create(:user) }
   given(:user2) { create(:user) }
@@ -16,11 +16,13 @@ feature 'User can edit own question', %q{
       sign_in(user)
       visit question_path(question)
       click_on 'Edit question'
-      expect(page).to have_field('Title', with: question.title)
-      expect(page).to have_field('Body', with: question.body)
-      fill_in 'Title', with: 'Another title'
-      fill_in 'Body', with: 'New body'
-      click_on 'Ask question'
+      within "#edit-question-#{question.id}" do
+        expect(page).to have_field('Title', with: question.title)
+        expect(page).to have_field('Body', with: question.body)
+        fill_in 'Title', with: 'Another title'
+        fill_in 'Body', with: 'New body'
+        click_on 'Save'
+      end
       expect(page).to have_content 'Question was successfully updated.'
       expect(page).to have_content 'Another title'
       expect(page).to have_content 'New body'
@@ -31,8 +33,10 @@ feature 'User can edit own question', %q{
       sign_in(user)
       visit question_path(question)
       click_on 'Edit question'
-      fill_in 'Title', with: ''
-      click_on 'Ask question'
+      within "#edit-question-#{question.id}" do
+        fill_in 'Title', with: ''
+        click_on 'Save'
+      end
       expect(page).to have_content "Title can't be blank"
     end
 
