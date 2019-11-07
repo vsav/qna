@@ -28,11 +28,10 @@ class QuestionsController < ApplicationController
   def edit; end
 
   def update
-    if current_user.is_author?(@question) && @question.update(question_params)
-      redirect_to @question, notice: 'Question was successfully updated.'
+    if current_user.is_author?(@question)
+      @question.update(question_params)
     else
-      flash[:alert] = 'Question was not updated.'
-      render :edit
+      redirect_to root_path
     end
   end
 
