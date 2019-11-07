@@ -2,7 +2,7 @@ class Answer < ApplicationRecord
   belongs_to :question
   belongs_to :user
   validates :body, presence: true
-  validates_uniqueness_of :best, if: :best , on: :create
+  validates :best, uniqueness: { scope: :question_id, best: true }, if: :best
 
   default_scope -> { order('best DESC, created_at') }
   scope :best, -> { where(best: true) }
