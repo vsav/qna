@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
 
-  let(:question) { create(:question) }
+  let(:question) { create(:question, user: user) }
   let(:user) { create(:user) }
   let(:user2) { create(:user) }
   let(:answer) { create(:answer, question: question, user: user) }
@@ -183,9 +183,10 @@ RSpec.describe AnswersController, type: :controller do
         expect(answer1).to_not be_best
       end
 
-      it 'renders best answer on top' do
-
+      it 'renders set_best' do
+        expect(response).to render_template :set_best
       end
+
     end
 
     context 'as not author' do
@@ -202,6 +203,10 @@ RSpec.describe AnswersController, type: :controller do
       it 'do not unmarks previous best' do
         answer1.reload
         expect(answer1).to be_best
+      end
+
+      it 'redirects to root path' do
+        expect(response).to redirect_to root_path
       end
     end
 
@@ -221,6 +226,7 @@ RSpec.describe AnswersController, type: :controller do
         answer1.reload
         expect(answer1).to be_best
       end
+
     end
   end
 end
