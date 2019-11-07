@@ -2,7 +2,7 @@ class Answer < ApplicationRecord
   belongs_to :question
   belongs_to :user
   validates :body, presence: true
-  validates :best, uniqueness: { scope: :question_id, best: true }, if: :best
+  validates :best, uniqueness: { scope: :question_id, best: true }, if: :best?
 
   default_scope -> { order('best DESC, created_at') }
   scope :best, -> { where(best: true) }
@@ -12,6 +12,10 @@ class Answer < ApplicationRecord
       question.answers.best.update_all(best: false)
       update!(best: true)
     end
+  end
+
+  def best?
+    self.best
   end
 
 end
