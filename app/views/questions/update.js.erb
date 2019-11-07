@@ -1,7 +1,7 @@
 var questionId = <%= @question.id %>
-var questionErrors = 'p#question-' + questionId + '-errors'
-$(questionErrors).html('<%= render 'shared/errors', resource: @question %>');
-<% unless @question.errors.present? %>
+var questionErrorsSelector = 'p#question-' + questionId + '-errors'
+$(questionErrorsSelector).html('<%= render 'shared/errors', resource: @question %>');
+<% if @question.errors.blank? %>
   $('.notice').html('');
   $('#question-' + questionId + '-title').html('<%= j @question.title %>');
   $('#question-' + questionId + '-body').html('<%= j @question.body %>');
