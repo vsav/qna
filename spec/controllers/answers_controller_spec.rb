@@ -163,5 +163,65 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
   end
+
+  describe 'PATCH #best' do
+    let!(:answer1) { create(:answer, question: question, user: user, best: true) }
+    let!(:answer2) { create(:answer, question: question, user: user) }
+    context 'as author' do
+      before do
+        sign_in(user)
+        patch :set_best, params: { id: answer2, format: :js }
+      end
+
+      it 'marks answer as best' do
+        answer2.reload
+        expect(answer2).to be_best
+      end
+
+      it 'unmarks previous best ' do
+        answer1.reload
+        expect(answer1).to_not be_best
+      end
+
+      it 'renders best answer on top' do
+
+      end
+    end
+
+    context 'as not author' do
+      before do
+        sign_in(user2)
+        patch :set_best, params: { id: answer2, format: :js }
+      end
+
+      it 'do not marks answer as best' do
+        answer2.reload
+        expect(answer2).to_not be_best
+      end
+
+      it 'do not unmarks previous best' do
+        answer1.reload
+        expect(answer1).to be_best
+      end
+    end
+
+    context 'as guest' do
+
+      it 'returns status 401: unauthorized' do
+        patch :set_best, params: { id: answer2, format: :js }
+        expect(response).to have_http_status(401)
+      end
+
+      it 'do not marks answer as best' do
+        answer2.reload
+        expect(answer2).to_not be_best
+      end
+
+      it 'do not unmarks previous best' do
+        answer1.reload
+        expect(answer1).to be_best
+      end
+    end
+  end
 end
 
