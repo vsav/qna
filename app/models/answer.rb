@@ -14,8 +14,4 @@ class Answer < ApplicationRecord
     end
   end
 
-  def best?
-    self.best
-  end
-
 end
