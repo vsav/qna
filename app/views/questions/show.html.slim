@@ -14,9 +14,12 @@
         = f.text_area :body
         = f.submit 'Save'
 
-    -if current_user&.is_author?(@question)
-      =link_to 'Delete question | ', question_path(@question), method: :delete, data: {question_id: @question.id}, remote: true
-      =link_to 'Edit question', '#', class: 'edit-question-link', data: { question_id: @question.id }
+-if @question.file.attached?
+  p = link_to @question.file.filename.to_s, url_for(@question.file)
+
+-if current_user&.is_author?(@question)
+  =link_to 'Delete question', question_path(@question), method: :delete
+  =link_to 'Edit question', edit_question_path(@question)
 
     .answers
       = render @question.answers
