@@ -40,9 +40,26 @@ feature 'User can edit own question', %q{
       expect(page).to have_content "Title can't be blank"
     end
 
+    scenario 'author trying to attach files to own question' do
+      sign_in(user)
+      visit question_path(question)
+      click_on 'Edit question'
+
+      within "#edit-question-#{question.id}" do
+        expect(page).to have_field 'question_files'
+        attach_file 'Files', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+        click_on 'Save'
+      end
+      within "#question-#{question.id}" do
+        expect(page).to have_link 'rails_helper.rb'
+        expect(page).to have_link 'spec_helper.rb'
+      end
+    end
+
     scenario 'user trying to edit other users question' do
       sign_in(user2)
       visit question_path(question)
+      expect(page).to_not have_link 'Remove file'
       expect(page).to_not have_link 'Edit question'
     end
   end
@@ -50,6 +67,7 @@ feature 'User can edit own question', %q{
   describe 'Unauthenticated user' do
     scenario 'trying to edit question' do
       visit question_path(question)
+      expect(page).to_not have_link 'Remove file'
       expect(page).to_not have_link 'Edit question'
     end
   end
