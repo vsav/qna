@@ -1,11 +1,21 @@
 var questionId = <%= @question.id %>
 var questionErrorsSelector = 'p#question-' + questionId + '-errors'
+var questionFiles = []
 $(questionErrorsSelector).html('<%= render 'shared/errors', resource: @question %>');
 <% if @question.errors.blank? %>
   $('.notice').html('');
   $('#question-' + questionId + '-title').html('<%= j @question.title %>');
   $('#question-' + questionId + '-body').html('<%= j @question.body %>');
+
+  <% @question.files.each do |file| %>
+    questionFiles.push("<li id = file- + <%= file.id %>><%= j link_to file.filename.to_s, url_for(file) %></li>")
+  <% end %>
+
+  $('#question-' + questionId + '-files').html(questionFiles)
+
   $('.edit-question-link').show();
   $('form#edit-question-' + questionId).addClass('hidden');
   $('.notice').append('Question was successfully updated.');
 <% end %>
+
+
