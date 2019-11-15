@@ -12,17 +12,23 @@
         = f.text_field :title
         = f.label :body
         = f.text_area :body
+        = f.label :files
+        = f.file_field :files, multiple: true, direct_upload: true
         = f.submit 'Save'
+
+    ul id = "question-#{ @question.id }-files"
+      - if @question.files.attached?
+        = render 'shared/files', resource: @question
 
     -if current_user&.is_author?(@question)
       =link_to 'Delete question | ', question_path(@question), method: :delete, data: {question_id: @question.id}, remote: true
       =link_to 'Edit question', '#', class: 'edit-question-link', data: { question_id: @question.id }
 
-    .answers
-      = render @question.answers
-    -if user_signed_in?
-      .new-answer-errors
-        = render 'shared/errors', resource: @answer
-      = render 'answers/form'
-    -else
-      p= 'You need to sign in or sign up to answer the questions'
+  .answers
+    = render @question.answers
+  -if user_signed_in?
+    .new-answer-errors
+      = render 'shared/errors', resource: @answer
+    = render 'answers/form'
+  -else
+    p= 'You need to sign in or sign up to answer the questions'

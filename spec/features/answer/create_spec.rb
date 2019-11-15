@@ -23,6 +23,19 @@ feature 'Authenticated can answer the questions', %q{
       expect(current_path).to eq question_path(question)
     end
 
+    scenario 'create answer with attached files' do
+      fill_in 'Body', with: 'Answer text'
+
+      attach_file 'Files', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+      click_on 'Create answer'
+
+      expect(page).to have_content 'Answer was successfully created.'
+      expect(page).to have_content 'Answer text'
+      expect(current_path).to eq question_path(question)
+      expect(page).to have_link 'rails_helper.rb'
+      expect(page).to have_link 'spec_helper.rb'
+    end
+
     scenario 'create answer with invalid attributes' do
       fill_in 'Body', with: ''
       click_on 'Create answer'
