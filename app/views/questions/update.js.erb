@@ -8,7 +8,7 @@ $(questionErrorsSelector).html('<%= render 'shared/errors', resource: @question 
   $('#question-' + questionId + '-body').html('<%= j @question.body %>');
 
   <% @question.files.each do |file| %>
-    questionFiles.push("<li id = file- + <%= file.id %>><%= j link_to file.filename.to_s, url_for(file) %></li>")
+    questionFiles.push("<li id = file-<%= file.id %>><%= j link_to file.filename.to_s, url_for(file) %></li>")
   <% end %>
 
   $('#question-' + questionId + '-files').html(questionFiles)

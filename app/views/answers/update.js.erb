@@ -7,7 +7,7 @@ $(answerErrors).html('<%= render 'shared/errors', resource: @answer %>');
   $('#answer-' + answerId + '-body').html('<%= j @answer.body %>');
 
   <% @answer.files.each do |file| %>
-    answerFiles.push("<li id = file- + <%= file.id %>><%= j link_to file.filename.to_s, url_for(file) %></li>")
+    answerFiles.push("<li id = file-<%= file.id %>><%= j link_to file.filename.to_s, url_for(file) %></li>")
   <% end %>
 
   $('#answer-' + answerId + '-files').html(answerFiles)

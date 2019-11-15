@@ -1,20 +1,13 @@
 = content_tag(:div, id: "answer-#{ answer.id }", class: answer.best? ? 'best-answer' : 'answer')
   p id = "answer-#{ answer.id }-errors"
-    = render 'shared/errors', resource: @answer
+    = render 'shared/errors', resource: answer
   p id = "answer-#{ answer.id }-body"
     = answer.body
   p = "Answer marked as best" if answer.best?
 
   ul id = "answer-#{ answer.id }-files"
     - if answer.files.attached?
-      - answer.files.each do |file|
-        li id = "file-#{file.id}"
-          = link_to file.filename.to_s, url_for(file)
-          - if current_user&.is_author?(answer)
-            = link_to 'Remove file', attachment_path(file),
-                      class: 'delete-attachment-link',
-                      method: :delete,
-                      remote: true
+      = render 'shared/files', resource: answer
 
   -if current_user&.is_author?(answer)
     = form_with model: answer, class: 'hidden', html: {id: "edit-answer-#{answer.id}"} do |f|
