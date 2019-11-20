@@ -11,6 +11,7 @@ require("jquery");
 require("packs/answers");
 require("packs/questions");
 require("packs/direct_uploads");
+import "cocoon-js";
 
 
 // Uncomment to copy all static images under ../images to the output folder and reference
