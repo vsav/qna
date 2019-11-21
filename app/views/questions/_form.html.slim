@@ -13,4 +13,11 @@
     .question-links
       = link_to_add_association 'add link', f, :links
 
+  p
+    = f.fields_for :reward do |reward|
+
+      = render 'reward_fields', f: reward
+    .question-reward
+      = link_to_add_association 'add reward', f, :reward
+
   p = f.submit 'Ask question'
