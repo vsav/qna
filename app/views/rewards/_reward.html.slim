@@ -1,0 +1,12 @@
+.rewards
+  ul
+    li.reward_title
+      = reward.title
+    li
+      = image_tag reward.image, width: '100', class: 'reward_image' if reward.image.attached?
+    p
+    'Reward for question:
+    = reward.question.title
+    p
+      'Achieved at:
+      = reward.created_at
