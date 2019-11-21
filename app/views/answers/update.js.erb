@@ -1,17 +1,8 @@
 var answerId = <%= @answer.id %>
 var answerErrors = 'p#answer-' + answerId + '-errors'
-var answerFiles = []
 $(answerErrors).html('<%= render 'shared/errors', resource: @answer %>');
 <% if @answer.errors.blank? %>
   $('.notice').html('');
-  $('#answer-' + answerId + '-body').html('<%= j @answer.body %>');
-
-  <% @answer.files.each do |file| %>
-    answerFiles.push("<li id = file-<%= file.id %>><%= j link_to file.filename.to_s, url_for(file) %></li>")
-  <% end %>
-
-  $('#answer-' + answerId + '-files').html(answerFiles)
-  $('.edit-answer-link').show();
-  $('form#edit-answer-' + answerId).addClass('hidden');
+  $('#answer-' + answerId).html('<%= j render @answer %>');
   $('.notice').append('Answer was successfully updated.');
 <% end %>
