@@ -9,11 +9,9 @@
     - if answer.files.attached?
       = render 'shared/files', resource: answer
 
-  .links
-    p Links:
-    ul
-      - answer.links.each do |link|
-        li = link_to link.name, link.url
+  ul id = "answer-#{ answer.id }-links"
+    - if answer.links.present?
+      = render 'shared/links', resource: answer
 
   -if current_user&.is_author?(answer)
     = form_with model: answer, class: 'hidden', html: {id: "edit-answer-#{answer.id}"} do |f|
@@ -21,6 +19,13 @@
       = f.text_area :body
       = f.label :files
       = f.file_field :files, multiple: true, direct_upload: true
+      p
+        = f.fields_for :links do |link|
+
+          = render 'link_fields', f: link
+        .answer-links
+          = link_to_add_association 'add link', f, :links
+
       = f.submit 'Save'
 
     =link_to 'Delete answer', answer_path(answer), method: :delete, data: {answer_id: answer.id}, remote: true
