@@ -8,7 +8,8 @@ feature 'User can mark answer for own question as best', %q{
 
   given!(:user) { create(:user) }
   given!(:user2) { create(:user) }
-  given(:question) { create(:question, user: user) }
+  given!(:reward) {create(:reward, question: question)}
+  given!(:question) { create(:question, user: user) }
   given!(:answer1) { create(:answer, question: question, user: user) }
   given!(:answer2) { create(:answer, question: question, user: user, best: true) }
   given!(:answer3) { create(:answer, question: question, user: user) }
@@ -52,6 +53,34 @@ feature 'User can mark answer for own question as best', %q{
         expect(page).to have_link(href: "/answers/#{answer2.id}/set_best")
       end
     end
+
+    scenario 'mark answer as best rewards answer user with question reward' do
+      sign_in(user)
+      visit question_path(question)
+      within "#answer-#{answer3.id}" do
+        expect(page).to have_link(href: "/answers/#{answer3.id}/set_best")
+        find("a[href = '/answers/#{answer3.id}/set_best']").click
+      end
+      visit user_rewards_path(user_id: user.id)
+      expect(page).to have_content(reward.title)
+      expect(page).to have_content(reward.question.title)
+    end
+
+    scenario 'mark answer as best do not rewards other user with question reward' do
+      sign_in(user)
+      visit question_path(question)
+      within "#answer-#{answer1.id}" do
+        expect(page).to have_link(href: "/answers/#{answer1.id}/set_best")
+        find("a[href = '/answers/#{answer1.id}/set_best']").click
+      end
+      click_on 'Sign out'
+      sign_in(user2)
+      click_on 'View rewards'
+
+      expect(page).to_not have_content(reward.title)
+      expect(page).to_not have_content(reward.question.title)
+    end
+
 
     scenario 'non-author trying to mark answer as best' do
       sign_in(user2)
