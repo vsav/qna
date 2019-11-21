@@ -19,7 +19,7 @@ feature 'User can create question', %q{
       fill_in 'Title', with: 'Test question'
       fill_in 'Body', with: 'text text text'
       click_on 'Ask question'
-      expect(page).to have_content 'Your question successfully created.'
+      expect(page).to have_content 'Question was successfully created.'
       expect(page).to have_content 'Test question'
       expect(page).to have_content 'text text text'
     end
@@ -43,6 +43,45 @@ feature 'User can create question', %q{
       expect(page).to have_link 'rails_helper.rb'
       expect(page).to have_link 'spec_helper.rb'
     end
+
+    scenario 'create question with valid link' do
+      fill_in 'Title', with: 'Test question'
+      fill_in 'Body', with: 'Question text'
+      fill_in 'Link name', with: 'Question link'
+      fill_in 'Url', with: 'http://google.com'
+      click_on 'Ask question'
+      expect(page).to have_content 'Question was successfully created.'
+      expect(page).to have_link 'Question link'
+    end
+
+    scenario 'create question with invalid link' do
+      fill_in 'Title', with: 'Test question'
+      fill_in 'Body', with: 'Question text'
+      fill_in 'Link name', with: 'Question link'
+      fill_in 'Url', with: 'invalid_url'
+      click_on 'Ask question'
+      expect(page).to have_content 'Links url must be a valid URL format'
+    end
+
+    scenario 'create question with valid gist url' do
+      fill_in 'Title', with: 'Test question'
+      fill_in 'Body', with: 'Question text'
+      fill_in 'Link name', with: 'Question link'
+      fill_in 'Url', with: 'https://gist.github.com/vsav/d0a264036e740851c80c313292b08899'
+      click_on 'Ask question'
+      expect(page).to have_content 'Question was successfully created.'
+      expect(page).to have_content 'QnA test Gist'
+    end
+
+    scenario 'create answer with invalid gist url' do
+      fill_in 'Title', with: 'Test question'
+      fill_in 'Body', with: 'Question text'
+      fill_in 'Link name', with: 'Question link'
+      fill_in 'Url', with: 'https://gist.github.com/vsav/404404'
+      click_on 'Ask question'
+      expect(page).to have_content 'URL not found'
+    end
+
   end
 
   scenario 'Unauthenticated user tries to ask a question' do
