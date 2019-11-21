@@ -4,4 +4,6 @@ $('.new-answer-errors').html('<%= render 'shared/errors', resource: @answer %>')
   $('.answers').append('<%= j render @answer %>');
   $('.new-answer-form #answer_body').val('');
   $('.notice').append('Answer was successfully created.');
+  $('input#answer_links_attributes_0_name').val('');
+  $('input#answer_links_attributes_0_url').val('');
 <% end %>
