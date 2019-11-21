@@ -8,6 +8,7 @@ feature 'Authenticated can answer the questions', %q{
   given(:user) { create(:user) }
   given(:question) { create(:question, user: user) }
   given(:answer) { create(:answer, question: question, user: user) }
+
   describe 'Authenticated user' do
     background do
       sign_in(user)
@@ -34,6 +35,42 @@ feature 'Authenticated can answer the questions', %q{
       expect(current_path).to eq question_path(question)
       expect(page).to have_link 'rails_helper.rb'
       expect(page).to have_link 'spec_helper.rb'
+    end
+
+    scenario 'create answer with valid link' do
+      fill_in 'Body', with: 'Answer text'
+      fill_in 'Link name', with: 'Answer link'
+      fill_in 'Url', with: 'http://google.com'
+      click_on 'Create answer'
+      expect(page).to have_content 'Answer was successfully created.'
+      expect(page).to have_content 'Answer text'
+      expect(page).to have_link 'Answer link'
+    end
+
+    scenario 'create answer with invalid link' do
+      fill_in 'Body', with: 'Answer text'
+      fill_in 'Link name', with: 'Answer link'
+      fill_in 'Url', with: 'invalid_url'
+      click_on 'Create answer'
+      expect(page).to have_content 'Links url must be a valid URL format'
+    end
+
+    scenario 'create answer with valid gist url' do
+      fill_in 'Body', with: 'Answer text'
+      fill_in 'Link name', with: 'Answer link'
+      fill_in 'Url', with: 'https://gist.github.com/vsav/d0a264036e740851c80c313292b08899'
+      click_on 'Create answer'
+      expect(page).to have_content 'Answer was successfully created.'
+      expect(page).to have_content 'Answer text'
+      expect(page).to have_content 'QnA test Gist'
+    end
+
+    scenario 'create answer with invalid gist url' do
+      fill_in 'Body', with: 'Answer text'
+      fill_in 'Link name', with: 'Answer link'
+      fill_in 'Url', with: 'https://gist.github.com/vsav/404404'
+      click_on 'Create answer'
+      expect(page).to have_content 'URL not found'
     end
 
     scenario 'create answer with invalid attributes' do
