@@ -73,13 +73,23 @@ feature 'User can create question', %q{
       expect(page).to have_content 'QnA test Gist'
     end
 
-    scenario 'create answer with invalid gist url' do
+    scenario 'create question with invalid gist url' do
       fill_in 'Title', with: 'Test question'
       fill_in 'Body', with: 'Question text'
       fill_in 'Link name', with: 'Question link'
       fill_in 'Url', with: 'https://gist.github.com/vsav/404404'
       click_on 'Ask question'
       expect(page).to have_content 'URL not found'
+    end
+
+    scenario 'asks a question with reward' do
+      fill_in 'Title', with: 'Test question'
+      fill_in 'Body', with: 'text text text'
+      fill_in 'Reward title', with: 'Reward for best answer'
+      attach_file 'Image', "#{Rails.root}/spec/fixtures/files/image.jpg"
+      click_on 'Ask question'
+      expect(page).to have_content 'Reward for best answer'
+      expect(page.find('.reward_image')['src']).to have_content 'image.jpg'
     end
 
   end
