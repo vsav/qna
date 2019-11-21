@@ -1,13 +1,13 @@
 .question
-  = content_tag(:div, id: "question-#{ @question.id }")
-    p id = "question-#{ @question.id }-errors"
-      = render 'shared/errors', resource: @question
-    h1 id = "question-#{ @question.id }-title"
-      = @question.title
-    p id = "question-#{ @question.id }-body"
-      = @question.body
+  = content_tag(:div, id: "question-#{ question.id }")
+    p id = "question-#{ question.id }-errors"
+      = render 'shared/errors', resource: question
+    h1 id = "question-#{ question.id }-title"
+      = question.title
+    p id = "question-#{ question.id }-body"
+      = question.body
 
-      = form_with model: @question, class: 'hidden', html: {id: "edit-question-#{@question.id}"} do |f|
+      = form_with model: question, class: 'hidden', html: {id: "edit-question-#{question.id}"} do |f|
         = f.label :title
         = f.text_field :title
         = f.label :body
@@ -15,22 +15,36 @@
         = f.label :files
         = f.file_field :files, multiple: true, direct_upload: true
         p
-          = f.fields_for :links do |link|
+          = f.fields_for :reward do |reward|
+            = render 'reward_fields', f: reward
+          .question-reward
 
+        p
+          = f.fields_for :links do |link|
             = render 'link_fields', f: link
           .question-links
             = link_to_add_association 'add link', f, :links
+
+
         = f.submit 'Save'
 
-    ul id = "question-#{ @question.id }-files"
-      - if @question.files.attached?
-        = render 'shared/files', resource: @question
+    ul id = "question-#{ question.id }-files"
+      - if question.files.attached?
+        = render 'shared/files', resource: question
 
-    ul id = "question-#{ @question.id }-links"
-      - if @question.links.present?
-        = render 'shared/links', resource: @question
+    ul id = "question-#{ question.id }-links"
+      - if question.links.present?
+        = render 'shared/links', resource: question
 
-    -if current_user&.is_author?(@question)
-      =link_to 'Delete question | ', question_path(@question), method: :delete, data: {question_id: @question.id}, remote: true
-      =link_to 'Edit question', '#', class: 'edit-question-link', data: { question_id: @question.id }
+    ul id = "question-#{ question.id }-reward"
+      - if question.reward.present?
+        p rewards for this question:
+        li.reward_title
+          = question.reward.title
+        li
+          = image_tag question.reward.image, width: '100', class: 'reward_image' if question.reward.image.attached?
+
+    -if current_user&.is_author?(question)
+      =link_to 'Delete question | ', question_path(question), method: :delete, data: {question_id: question.id}, remote: true
+      =link_to 'Edit question', '#', class: 'edit-question-link', data: { question_id: question.id }
 
