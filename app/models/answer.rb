@@ -14,7 +14,13 @@ class Answer < ApplicationRecord
     transaction do
       question.answers.best.update_all(best: false)
       update!(best: true)
+      give_thanks
     end
   end
 
+  private
+
+  def give_thanks
+    question.reward&.update!(user: user)
+  end
 end
