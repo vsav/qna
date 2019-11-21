@@ -56,6 +56,68 @@ feature 'User can edit own question', %q{
       end
     end
 
+    scenario 'author trying to attach links to own question' do
+      sign_in(user)
+      visit question_path(question)
+      click_on 'Edit question'
+      within "#edit-question-#{question.id}" do
+        click_on 'add link'
+        fill_in 'Link name', with: 'Question link'
+        fill_in 'Url', with: 'http://google.com'
+        click_on 'Save'
+      end
+      within "#question-#{question.id}" do
+        expect(page).to have_link 'Question link'
+      end
+    end
+
+    scenario 'author trying to attach invalid links to own question' do
+      sign_in(user)
+      visit question_path(question)
+      click_on 'Edit question'
+      within "#edit-question-#{question.id}" do
+        click_on 'add link'
+        fill_in 'Link name', with: 'Question link'
+        fill_in 'Url', with: 'invalid'
+        click_on 'Save'
+      end
+      within "#question-#{question.id}" do
+        expect(page).to have_content 'Links url must be a valid URL format'
+      end
+    end
+
+    scenario 'author trying to attach gist link to own question' do
+      sign_in(user)
+      visit question_path(question)
+      click_on 'Edit question'
+
+      within "#edit-question-#{question.id}" do
+        click_on 'add link'
+        fill_in 'Link name', with: 'Question link'
+        fill_in 'Url', with: 'https://gist.github.com/vsav/d0a264036e740851c80c313292b08899'
+        click_on 'Save'
+      end
+      within "#question-#{question.id}" do
+        expect(page).to have_content 'QnA test Gist'
+      end
+    end
+
+    scenario 'author trying to attach gist link to own question' do
+      sign_in(user)
+      visit question_path(question)
+      click_on 'Edit question'
+
+      within "#edit-question-#{question.id}" do
+        click_on 'add link'
+        fill_in 'Link name', with: 'Question link'
+        fill_in 'Url', with: 'https://gist.github.com/vsav/404404'
+        click_on 'Save'
+      end
+      within "#question-#{question.id}" do
+        expect(page).to have_content 'URL not found'
+      end
+    end
+
     scenario 'user trying to edit other users question' do
       sign_in(user2)
       visit question_path(question)
