@@ -70,7 +70,7 @@ feature 'Authenticated can answer the questions', %q{
       fill_in 'Link name', with: 'Answer link'
       fill_in 'Url', with: 'https://gist.github.com/vsav/404404'
       click_on 'Create answer'
-      expect(page).to have_content 'URL not found'
+      expect(page).to have_css '.loading-failed'
     end
 
     scenario 'create answer with invalid attributes' do

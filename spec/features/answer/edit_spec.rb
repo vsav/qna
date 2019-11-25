@@ -67,6 +67,23 @@ feature 'Edit answer', %q{
       end
     end
 
+    scenario 'author trying to delete own answer attached links' do
+      sign_in(user)
+      visit question_path(question)
+      click_on 'Edit answer'
+      within "#edit-answer-#{answer.id}" do
+        click_on 'add link'
+        fill_in 'Link name', with: 'Answer link'
+        fill_in 'Url', with: 'http://google.com'
+        click_on 'Save'
+      end
+      within "#answer-#{answer.id}" do
+        expect(page).to have_link 'Answer link'
+        click_on 'remove link'
+        expect(page).to_not have_link 'Answer link'
+      end
+    end
+
     scenario 'author trying to attach invalid links to own answer' do
       sign_in(user)
       visit question_path(question)
@@ -98,7 +115,7 @@ feature 'Edit answer', %q{
       end
     end
 
-    scenario 'author trying to attach gist link to own answer' do
+    scenario 'author trying to attach invalid gist link to own answer' do
       sign_in(user)
       visit question_path(question)
       click_on 'Edit answer'
@@ -110,7 +127,7 @@ feature 'Edit answer', %q{
         click_on 'Save'
       end
       within "#answer-#{answer.id}" do
-        expect(page).to have_content 'URL not found'
+        expect(page).to have_css '.loading-failed'
       end
     end
 

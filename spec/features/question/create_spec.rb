@@ -63,7 +63,7 @@ feature 'User can create question', %q{
       expect(page).to have_content 'Links url must be a valid URL format'
     end
 
-    scenario 'create question with valid gist url' do
+    scenario 'create question with valid gist url', js: true do
       fill_in 'Title', with: 'Test question'
       fill_in 'Body', with: 'Question text'
       fill_in 'Link name', with: 'Question link'
@@ -73,13 +73,13 @@ feature 'User can create question', %q{
       expect(page).to have_content 'QnA test Gist'
     end
 
-    scenario 'create question with invalid gist url' do
+    scenario 'create question with invalid gist url', js: true do
       fill_in 'Title', with: 'Test question'
       fill_in 'Body', with: 'Question text'
       fill_in 'Link name', with: 'Question link'
       fill_in 'Url', with: 'https://gist.github.com/vsav/404404'
       click_on 'Ask question'
-      expect(page).to have_content 'URL not found'
+      expect(page).to have_css '.loading-failed'
     end
 
     scenario 'asks a question with reward' do

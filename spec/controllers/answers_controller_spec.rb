@@ -11,6 +11,8 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'with valid attributes' do
       before { sign_in(user) }
+      let!(:answer) { create(:answer, question: question, user: user) }
+
       it 'belongs to user and belongs to question' do
         post :create, params: { question_id: question, user: user, answer: attributes_for(:answer), format: :js }
         answer = Answer.order(created_at: :desc).first
@@ -19,7 +21,14 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'saves a new answer to database' do
-        expect { post :create, params: { question_id: question, answer: attributes_for(:answer) }, format: :js }.to change(Answer, :count).by(1)
+        expect { post :create, params: { question_id: question, answer: attributes_for(:answer) },
+                      format: :js }.to change(Answer, :count).by(1)
+      end
+
+      it 'saves a new answer with links to database' do
+        expect { post :create, params: { question_id: question, answer: attributes_for(:answer),
+                                         link: create(:link, :valid_url, linkable: answer) },
+                                         format: :js }.to change(Answer, :count).by(1)
       end
 
       it 'renders create template' do
@@ -31,7 +40,8 @@ RSpec.describe AnswersController, type: :controller do
     context 'with invalid attributes' do
       before { sign_in(user) }
       it 'does not save the answer to database' do
-        expect { post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) }, format: :js }.to_not change(Answer, :count)
+        expect { post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) },
+                      format: :js }.to_not change(Answer, :count)
       end
 
       it 'renders create template' do
@@ -57,6 +67,7 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'as author with valid attributes' do
       before { sign_in(user) }
+
       it 'assigns the requested answer to @answer' do
         patch :update, params: { question_id: question, id: answer, answer: attributes_for(:answer), format: :js }
         expect(assigns(:answer)).to eq answer
@@ -68,10 +79,20 @@ RSpec.describe AnswersController, type: :controller do
         expect(answer.body).to eq 'new body'
       end
 
+      it 'adds links to answer' do
+        patch :update, params: { question_id: question, id: answer, answer: attributes_for(:answer),
+                               link: create(:link, :valid_url, linkable: answer)  }, format: :js
+        answer.reload
+        expect(answer.links.first.name).to eq 'MyString'
+        expect(answer.links.first.url).to eq 'http://example.com'
+      end
+
       it 'renders update view' do
         patch :update, params: { question_id: question, id: answer, answer: { body: 'new body' }, format: :js }
         expect(response).to render_template :update
       end
+
+
     end
 
     context 'as author with invalid attributes' do
