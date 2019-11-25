@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe RewardsController, type: :controller do
   let(:user) { create(:user) }
   let(:question) { create(:question, user: user) }
-  let!(:rewards) { create_list(:reward, 3, question: question, user: user) }
+  let!(:rewards) { create_list(:reward, 2, question: question, user: user) }
 
   describe 'GET #index' do
     context 'authenticated user' do

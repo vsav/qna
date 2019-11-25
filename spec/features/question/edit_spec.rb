@@ -71,6 +71,23 @@ feature 'User can edit own question', %q{
       end
     end
 
+    scenario 'author trying remove link from his own question' do
+      sign_in(user)
+      visit question_path(question)
+      click_on 'Edit question'
+      within "#edit-question-#{question.id}" do
+        click_on 'add link'
+        fill_in 'Link name', with: 'Question link'
+        fill_in 'Url', with: 'http://google.com'
+        click_on 'Save'
+      end
+      within "#question-#{question.id}" do
+        expect(page).to have_link 'Question link'
+        click_on 'remove link'
+        expect(page).to_not have_link 'Question link'
+      end
+    end
+
     scenario 'author trying to attach invalid links to own question' do
       sign_in(user)
       visit question_path(question)
@@ -102,7 +119,7 @@ feature 'User can edit own question', %q{
       end
     end
 
-    scenario 'author trying to attach gist link to own question' do
+    scenario 'author trying to attach invalid gist link to own question' do
       sign_in(user)
       visit question_path(question)
       click_on 'Edit question'
@@ -114,7 +131,7 @@ feature 'User can edit own question', %q{
         click_on 'Save'
       end
       within "#question-#{question.id}" do
-        expect(page).to have_content 'URL not found'
+        expect(page).to have_css '.loading-failed'
       end
     end
 

@@ -5,6 +5,7 @@ RSpec.describe QuestionsController, type: :controller do
   let(:user2) { create(:user) }
   let(:question) { create(:question, user: user) }
 
+
   describe 'GET #index' do
     let(:questions) { create_list(:question, 3) }
 
@@ -63,9 +64,14 @@ RSpec.describe QuestionsController, type: :controller do
     context 'with valid attributes' do
 
       before { login(user) }
-
+      let!(:question) { create(:question, user: user) }
       it 'saves a new question to database' do
         expect { post :create, params: { question: attributes_for(:question) } }.to change(Question, :count).by(1)
+      end
+
+      it 'saves a new question with links to database' do
+        expect { post :create, params: { question: attributes_for(:question), link: create(:link, :valid_url, linkable: question) },
+                      format: :js }.to change(Question, :count).by(1)
       end
 
       it 'redirects to show view' do
@@ -123,6 +129,14 @@ RSpec.describe QuestionsController, type: :controller do
         question.reload
         expect(question.title).to eq 'new title'
         expect(question.body).to eq 'new body'
+      end
+
+      it 'adds links to question' do
+        patch :update, params: { id: question, question: attributes_for(:question),
+                                 link: create(:link, :valid_url, linkable: question)  }, format: :js
+        question.reload
+        expect(question.links.first.name).to eq 'MyString'
+        expect(question.links.first.url).to eq 'http://example.com'
       end
 
       it 'renders question update view' do
