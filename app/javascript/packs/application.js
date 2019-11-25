@@ -11,6 +11,7 @@ require("jquery");
 require("packs/answers");
 require("packs/questions");
 require("packs/direct_uploads");
+require("packs/gist-async");
 import "cocoon-js";
 
 

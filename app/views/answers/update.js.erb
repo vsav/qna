@@ -4,5 +4,6 @@ $(answerErrors).html('<%= render 'shared/errors', resource: @answer %>');
 <% if @answer.errors.blank? %>
   $('.notice').html('');
   $('#answer-' + answerId).html('<%= j render @answer %>');
+  window.gistAsync();
   $('.notice').append('Answer was successfully updated.');
 <% end %>

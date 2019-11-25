@@ -4,6 +4,7 @@ $(questionErrorsSelector).html('<%= render 'shared/errors', resource: @question 
 <% if @question.errors.blank? %>
   $('.notice').html('');
   $('#question-' + questionId).html('<%= j render @question %>');
+  window.gistAsync();
   $('.notice').append('Question was successfully updated.');
 <% end %>
 

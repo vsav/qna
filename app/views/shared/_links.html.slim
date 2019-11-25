@@ -1,7 +1,8 @@
 - resource.links.each do |link|
   - if link.gist?
-    = link.gist_content
-  -else
+    .gist data-gist="#{link.url.split('/').last}"
+      a href="#{link.url}" Loading gist
+  - else
     li id = "link-#{link.id}"
       = link_to link.name, link.url
       - if current_user&.is_author?(resource)
