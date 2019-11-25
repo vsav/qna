@@ -2,10 +2,12 @@ require 'rails_helper'
 
 RSpec.describe Answer, type: :model do
   let!(:user) { create(:user) }
+  let!(:user2) { create(:user) }
   let!(:question) { create(:question, user: user) }
+  let!(:reward) { create(:reward, question: question) }
   let!(:answer1) { create(:answer, question: question, user: user) }
   let!(:best_answer) { create(:answer, question: question, user: user, best: true) }
-  let!(:answer3) { create(:answer, question: question, user: user) }
+  let!(:answer3) { create(:answer, question: question, user: user2) }
 
   it { should have_many(:links).dependent(:destroy) }
   it { should belong_to(:question) }
@@ -34,6 +36,15 @@ RSpec.describe Answer, type: :model do
     it 'should change best answer' do
       expect(best_answer).to_not be_best
       expect(answer1).to be_best
+    end
+
+    it 'should grant reward to other user' do
+      expect(user.rewards).to eq([reward])
+      answer3.mark_best!
+      user.reload
+      user2.reload
+      expect(user.rewards).to eq([])
+      expect(user2.rewards).to eq([reward])
     end
   end
 
