@@ -9,16 +9,4 @@ class Link < ApplicationRecord
   def gist?
     url.match(GIST_URL)
   end
-
-  def gist_content
-    begin
-      client = Octokit::Client.new(access_token: ENV['ACCESS_TOKEN'])
-      gist = client.gist(url.split("/").last)
-      file = {}
-      gist.files.each { |_, v| file = v }
-      file.content
-    rescue Octokit::NotFound
-      'URL not found'
-    end
-  end
 end
