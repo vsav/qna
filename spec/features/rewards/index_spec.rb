@@ -4,8 +4,8 @@ feature 'User can view own rewards' do
   given(:user) { create(:user) }
   given(:user2) { create(:user) }
   given(:question) { create(:question) }
-  given!(:reward) { create(:reward, question: question, user: user) }
-  given!(:reward2) { create(:reward, question: question, user: user2) }
+  given!(:reward) { create(:reward, user: user) }
+  given!(:reward2) { create(:reward, user: user2) }
 
   describe 'Authenticated user' do
     background do
