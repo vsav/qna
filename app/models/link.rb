@@ -4,9 +4,17 @@ class Link < ApplicationRecord
 
   belongs_to :linkable, polymorphic: true
   validates :name, :url, presence: true
-  validates :url, format: { with: URL_FORMAT, message: 'must be a valid URL format' }
+  validate :validate_url_format, on: :create
 
   def gist?
     url.match(GIST_URL)
+  end
+
+  private
+
+  def validate_url_format
+    unless url =~ URL_FORMAT
+      errors.add(:url, 'must be a valid URL format')
+    end
   end
 end
