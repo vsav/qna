@@ -7,26 +7,17 @@ module Voted
   end
 
   def like
-    vote = @votable.like!(current_user)
-    if vote.save
-      render_json
-    else
-      render json: vote.errors
-    end
+    @votable.like!(current_user)
+    render_json
   end
 
   def dislike
-    vote = @votable.dislike!(current_user)
-    if vote.save
-      render_json
-    else
-      render json: vote.errors
-    end
+    @votable.dislike!(current_user)
+    render_json
   end
 
   def unvote
-    votes = @votable.votes.find_by(user_id: current_user)
-    votes.destroy
+    @votable.votes.find_by(user_id: current_user)&.destroy
     render_json
   end
 
