@@ -4,5 +4,5 @@ class Vote < ApplicationRecord
 
   validates :rating, presence: true
   validates :user, uniqueness: { scope: [:votable_type, :votable_id], message: 'you can like/dislike only once' }
-  validates_inclusion_of :rating, in: -1..1
+  validates_inclusion_of :rating, in: [-1, 1]
 end
