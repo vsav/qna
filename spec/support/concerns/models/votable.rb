@@ -5,6 +5,7 @@ RSpec.shared_examples_for Votable do
   let(:user1) { create(:user) }
   let(:user2) { create(:user) }
   let(:user3) { create(:user) }
+  let(:user4) { create(:user) }
   let(:votable) { create(:question, user: user1) }
   let!(:vote1) { create(:vote, :like, user: user2, votable: votable) }
   let!(:vote2) { create(:vote, :dislike, user: user3, votable: votable) }
@@ -18,29 +19,27 @@ RSpec.shared_examples_for Votable do
     end
 
     describe '#like' do
-      before do
-        votable.like!(user3)
-      end
-
-      it 'changes votable rating by 2' do
-        expect(votable.total_rating).to eq 2
+      it 'changes votable total rating by 1' do
+        expect(votable.total_rating).to eq 0
+        votable.like!(user4)
+        expect(votable.total_rating).to eq 1
       end
 
       it 'changes votable rating only once per user like' do
-        expect(votable.total_rating).to eq 2
-        votable.like!(user3)
-        expect(votable.total_rating).to eq 2
+        expect(votable.total_rating).to eq 0
+        votable.like!(user4)
+        expect(votable.total_rating).to eq 1
+        votable.like!(user4)
+        expect(votable.total_rating).to eq 1
       end
     end
 
     describe '#dislike?' do
-      before do
-        votable.like!(user3)
-      end
-      it 'changes votable rating by -2' do
-        expect(votable.total_rating).to eq 2
-        votable.dislike!(user3)
+
+      it 'changes votable rating by -1' do
         expect(votable.total_rating).to eq 0
+        votable.dislike!(user4)
+        expect(votable.total_rating).to eq -1
       end
     end
 
