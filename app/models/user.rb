@@ -6,8 +6,21 @@ class User < ApplicationRecord
   has_many :questions, dependent: :destroy
   has_many :answers, dependent: :destroy
   has_many :rewards, dependent: :destroy
+  has_many :votes, dependent: :destroy
 
   def is_author?(resource)
     resource.user_id == self.id
+  end
+
+  def liked?(resource)
+    votes.exists?(votable: resource, rating: 1)
+  end
+
+  def disliked?(resource)
+    votes.exists?(votable: resource, rating: -1)
+  end
+
+  def voted?(resource)
+    votes.exists?(votable: resource)
   end
 end
