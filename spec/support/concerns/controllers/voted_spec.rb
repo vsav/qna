@@ -26,6 +26,17 @@ RSpec.shared_examples_for Voted do
         expect { post :like, params: { id: votable }, format: :json }.to change(votable, :total_rating).by(1)
       end
 
+      it 'renders valid json on like' do
+        post :like, params: { id: votable }, format: :json
+        rendered_json = {
+          total_rating: votable.total_rating,
+          klass: votable.class.to_s.downcase,
+          votable_id: votable.id
+        }.to_json
+
+        expect(response.body).to eq(rendered_json)
+      end
+
       it 'tries to like other user question more than once' do
         post :like, params: { id: votable }, format: :json
         expect { post :like, params: { id: votable }, format: :json }.to_not change(votable, :total_rating)
@@ -41,6 +52,7 @@ RSpec.shared_examples_for Voted do
     context 'Unauthenticated user' do
       it 'tries to like question' do
         expect { post :like, params: { id: votable }, format: :json }.to_not change(votable, :total_rating)
+        expect(response).to have_http_status 401
       end
     end
   end
@@ -52,6 +64,17 @@ RSpec.shared_examples_for Voted do
 
       it 'tries to dislike other user question' do
         expect { post :dislike, params: { id: votable }, format: :json }.to change(votable, :total_rating).by(-1)
+      end
+
+      it 'renders valid json on dislike' do
+        post :dislike, params: { id: votable }, format: :json
+        rendered_json = {
+            total_rating: votable.total_rating,
+            klass: votable.class.to_s.downcase,
+            votable_id: votable.id
+        }.to_json
+
+        expect(response.body).to eq(rendered_json)
       end
 
       it 'tries to dislike other user question more than once' do
@@ -69,6 +92,7 @@ RSpec.shared_examples_for Voted do
     context 'Unauthenticated user' do
       it 'tries to dislike question' do
         expect { post :dislike, params: { id: votable }, format: :json }.to_not change(votable, :total_rating)
+        expect(response).to have_http_status 401
       end
     end
   end
@@ -83,6 +107,18 @@ RSpec.shared_examples_for Voted do
         expect { delete :unvote, params: { id: votable }, format: :json }.to change(votable, :total_rating).by(-1)
       end
 
+      it 'renders valid json on unvote' do
+        post :dislike, params: { id: votable }, format: :json
+        delete :unvote, params: { id: votable }, format: :json
+        rendered_json = {
+            total_rating: votable.total_rating,
+            klass: votable.class.to_s.downcase,
+            votable_id: votable.id
+        }.to_json
+
+        expect(response.body).to eq(rendered_json)
+      end
+
       it 'tries to recall other user vote' do
         post :like, params: { id: votable }, format: :json
         set_session do
@@ -90,6 +126,12 @@ RSpec.shared_examples_for Voted do
           expect { delete :unvote, params: { id: votable }, format: :json }.to_not change(votable, :total_rating)
           expect(response).to have_http_status 403
         end
+      end
+    end
+    context 'Unauthenticated user' do
+      it 'tries to dislike question' do
+        expect { post :dislike, params: { id: votable }, format: :json }.to_not change(votable, :total_rating)
+        expect(response).to have_http_status 401
       end
     end
   end
