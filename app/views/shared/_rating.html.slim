@@ -1,0 +1,14 @@
+.ratings
+  span.total-rating
+    = "Rating: #{resource.total_rating}"
+  .vote-controls
+    = link_to 'like', polymorphic_path(resource, action: :like),
+            class: 'vote-button like-button' "#{' disabled' if current_user&.liked?(resource) || current_user&.is_author?(resource) || !current_user}",
+            method: :post, remote: true, data: { type: :json }
+    = link_to 'unvote', polymorphic_path(resource, action: :unvote),
+            class: 'vote-button unvote-button' "#{' disabled' if !current_user&.voted?(resource) || current_user&.is_author?(resource) || !current_user}",
+            method: :delete, remote: true, data: {type: :json}
+    = link_to 'dislike', polymorphic_path(resource, action: :dislike),
+            class: 'vote-button dislike-button' "#{' disabled' if current_user&.disliked?(resource) || current_user&.is_author?(resource) || !current_user}",
+            method: :post, remote: true, data: { type: :json }
+

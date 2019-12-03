@@ -6,6 +6,8 @@
       = question.title
     p id = "question-#{ question.id }-body"
       = question.body
+    div id = "question-#{ question.id }-rating"
+      = render 'shared/rating', resource: question
 
       = form_with model: question, class: 'hidden', html: {id: "edit-question-#{question.id}"} do |f|
         = f.label :title
