@@ -12,6 +12,7 @@ require("packs/answers");
 require("packs/questions");
 require("packs/direct_uploads");
 require("packs/gist-async");
+require("packs/vote");
 import "cocoon-js";
 
 
