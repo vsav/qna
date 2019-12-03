@@ -5,6 +5,9 @@
     = answer.body
   p = "Answer marked as best" if answer.best?
 
+  div id = "answer-#{ answer.id }-rating"
+    = render 'shared/rating', resource: answer
+
   ul id = "answer-#{ answer.id }-files"
     - if answer.files.attached?
       = render 'shared/files', resource: answer
