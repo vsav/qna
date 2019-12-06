@@ -1,7 +1,12 @@
--if user_signed_in?
-  = link_to 'Sign out', destroy_user_session_path, method: :delete
-  = link_to 'View rewards', user_rewards_path(current_user)
-- else
-  = link_to 'Sign in', new_user_session_path
+.navbar.navbar-dark.bg-dark
+  = link_to 'Home', root_path, class: 'navbar-brand'
+  .navbar-text
+    -if user_signed_in?
+      = "welcome, #{current_user.email}"
+      '  |
+      = link_to 'View rewards', user_rewards_path(current_user)
+      '  |
+      = link_to 'Sign out', destroy_user_session_path, method: :delete
+    -else
+      = link_to 'Sign in / Sign up', new_user_session_path
 
-= link_to 'Home', root_path

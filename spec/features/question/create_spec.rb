@@ -16,8 +16,8 @@ feature 'User can create question', %q{
     end
 
     scenario 'asks a question' do
-      fill_in 'Title', with: 'Test question'
-      fill_in 'Body', with: 'text text text'
+      fill_in 'Question title', with: 'Test question'
+      fill_in 'Question text', with: 'text text text'
       click_on 'Ask question'
       expect(page).to have_content 'Question was successfully created.'
       expect(page).to have_content 'Test question'
@@ -26,18 +26,18 @@ feature 'User can create question', %q{
 
     scenario 'asks a question with errors' do
 
-      fill_in 'Title', with: ''
-      fill_in 'Body', with: 'text text text'
+      fill_in 'Question title', with: ''
+      fill_in 'Question text', with: 'text text text'
       click_on 'Ask question'
 
       expect(page).to have_content "Title can't be blank"
     end
 
     scenario 'asks a question with attached files' do
-      fill_in 'Title', with: 'Test question'
-      fill_in 'Body', with: 'text text text'
+      fill_in 'Question title', with: 'Test question'
+      fill_in 'Question text', with: 'text text text'
 
-      attach_file 'Files', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+      attach_file 'Attach files?', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
       click_on 'Ask question'
 
       expect(page).to have_link 'rails_helper.rb'
@@ -45,8 +45,8 @@ feature 'User can create question', %q{
     end
 
     scenario 'create question with valid link' do
-      fill_in 'Title', with: 'Test question'
-      fill_in 'Body', with: 'Question text'
+      fill_in 'Question title', with: 'Test question'
+      fill_in 'Question text', with: 'Question text'
       fill_in 'Link name', with: 'Question link'
       fill_in 'Url', with: 'http://google.com'
       click_on 'Ask question'
@@ -55,8 +55,8 @@ feature 'User can create question', %q{
     end
 
     scenario 'create question with invalid link' do
-      fill_in 'Title', with: 'Test question'
-      fill_in 'Body', with: 'Question text'
+      fill_in 'Question title', with: 'Test question'
+      fill_in 'Question text', with: 'Question text'
       fill_in 'Link name', with: 'Question link'
       fill_in 'Url', with: 'invalid_url'
       click_on 'Ask question'
@@ -64,8 +64,8 @@ feature 'User can create question', %q{
     end
 
     scenario 'create question with valid gist url', js: true do
-      fill_in 'Title', with: 'Test question'
-      fill_in 'Body', with: 'Question text'
+      fill_in 'Question title', with: 'Test question'
+      fill_in 'Question text', with: 'Question text'
       fill_in 'Link name', with: 'Question link'
       fill_in 'Url', with: 'https://gist.github.com/vsav/d0a264036e740851c80c313292b08899'
       click_on 'Ask question'
@@ -74,8 +74,8 @@ feature 'User can create question', %q{
     end
 
     scenario 'create question with invalid gist url', js: true do
-      fill_in 'Title', with: 'Test question'
-      fill_in 'Body', with: 'Question text'
+      fill_in 'Question title', with: 'Test question'
+      fill_in 'Question text', with: 'Question text'
       fill_in 'Link name', with: 'Question link'
       fill_in 'Url', with: 'https://gist.github.com/vsav/404404'
       click_on 'Ask question'
@@ -83,10 +83,10 @@ feature 'User can create question', %q{
     end
 
     scenario 'asks a question with reward' do
-      fill_in 'Title', with: 'Test question'
-      fill_in 'Body', with: 'text text text'
+      fill_in 'Question title', with: 'Test question'
+      fill_in 'Question text', with: 'text text text'
       fill_in 'Reward title', with: 'Reward for best answer'
-      attach_file 'Image', "#{Rails.root}/spec/fixtures/files/image.jpg"
+      attach_file 'Attach reward image?', "#{Rails.root}/spec/fixtures/files/image.jpg"
       click_on 'Ask question'
       expect(page).to have_content 'Reward for best answer'
       expect(page.find('.reward_image')['src']).to have_content 'image.jpg'

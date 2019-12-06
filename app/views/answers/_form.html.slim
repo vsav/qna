@@ -1,14 +1,16 @@
-= form_with model: [@question, @answer], class: 'new-answer-form' do |f|
-  = f.label :body
-  = f.text_area :body
-  = f.label :files
-  = f.file_field :files, multiple: true, direct_upload: true
+= form_with model: [@question, @answer], class: 'new-answer-form mt-3' do |f|
+  .form-group
+    = f.label :body, 'Answer text'
+    = f.text_area :body, class: 'form-control', rows: 10
+  .form-group
+    = f.label :files, 'Attach files?'
+    = f.file_field :files, class: 'form-control-file', multiple: true, direct_upload: true
 
-  p
+  .form-group
     = f.fields_for :links do |link|
 
       = render 'link_fields', f: link
-    .answer-links
+    .answer-links.form-group
       = link_to_add_association 'add link', f, :links
 
-  p = f.submit 'Create answer'
+  p = f.submit 'Create answer', class: 'btn btn-primary btn-lg btn-block'

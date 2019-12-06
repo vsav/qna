@@ -1,9 +1,9 @@
 .nested-fields
-  p
+  .form-group
     = f.label :title, 'Reward title'
-    = f.text_field :title
-  p
-    = f.label :image
-    = f.file_field :image, direct_upload: true
-  p
+    = f.text_field :title, class: 'form-control'
+  .form-group
+    = f.label :image, 'Attach reward image?'
+    = f.file_field :image, class: 'form-control-file', direct_upload: true
+  .form-group
     = link_to_remove_association "remove link", f

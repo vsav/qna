@@ -1,11 +1,9 @@
 var questionId = <%= @question.id %>
-var questionErrorsSelector = 'p#question-' + questionId + '-errors'
+var questionErrorsSelector = 'div#question-' + questionId + '-errors'
 $(questionErrorsSelector).html('<%= render 'shared/errors', resource: @question %>');
 <% if @question.errors.blank? %>
-  $('.notice').html('');
   $('#question-' + questionId).html('<%= j render @question %>');
   window.gistAsync();
-  $('.notice').append('Question was successfully updated.');
 <% end %>
 
 
