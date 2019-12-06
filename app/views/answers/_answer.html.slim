@@ -1,37 +1,43 @@
-= content_tag(:div, id: "answer-#{ answer.id }", class: answer.best? ? 'best-answer' : 'answer')
-  p id = "answer-#{ answer.id }-errors"
+= content_tag(:div, id: "answer-#{ answer.id }", class: "answer card mt-3 #{answer.best? ? 'best-answer border-success ' : ''}")
+  div id = "answer-#{ answer.id }-errors"
     = render 'shared/errors', resource: answer
-  p id = "answer-#{ answer.id }-body"
+  - if answer.best?
+    .card-header = "Answer marked as best"
+  .card-body id = "answer-#{ answer.id }-body"
     = answer.body
-  p = "Answer marked as best" if answer.best?
-
-  div id = "answer-#{ answer.id }-rating"
+    footer class = 'blockquote-footer'
+      = "by #{answer.user.email}"
+  .mt-3.ml-3.mb-3 id = "answer-#{ answer.id }-rating"
     = render 'shared/rating', resource: answer
 
-  ul id = "answer-#{ answer.id }-files"
-    - if answer.files.attached?
+  - if answer.files.attached?
+    ul id = "answer-#{ answer.id }-files"
       = render 'shared/files', resource: answer
 
-  ul id = "answer-#{ answer.id }-links"
-    - if answer.links.present?
+  - if answer.links.present?
+    ul id = "answer-#{ answer.id }-links"
       = render 'shared/links', resource: answer
 
   -if current_user&.is_author?(answer)
-    = form_with model: answer, class: 'hidden', html: {id: "edit-answer-#{answer.id}"} do |f|
-      = f.label :body
-      = f.text_area :body
-      = f.label :files
-      = f.file_field :files, multiple: true, direct_upload: true
-      p
+    = form_with model: answer, class: 'hidden mt-3', html: {id: "edit-answer-#{answer.id}"} do |f|
+      .form-group
+        = f.label :body, 'Answer text'
+        = f.text_area :body, class: 'form-control', rows: 10
+      .form-group
+        = f.label :files, 'Attach files?'
+        = f.file_field :files, class: 'form-control-file', multiple: true, direct_upload: true
+      .form-group
         = f.fields_for :links do |link|
 
           = render 'link_fields', f: link
         .answer-links
           = link_to_add_association 'add link', f, :links
 
-      = f.submit 'Save'
-
-    =link_to 'Delete answer', answer_path(answer), method: :delete, data: {answer_id: answer.id}, remote: true
-    =link_to 'Edit answer', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
-  -if current_user&.is_author?(@question) && !answer.best?
-    =link_to 'Mark as best', set_best_answer_path(answer), id: "set-best-answer-link-#{ answer.id }", method: :patch, remote: true
+      = f.submit 'Save', class: 'btn btn-primary btn-lg btn-block'
+    .author-links.ml-3.mb-3
+      =link_to 'Delete answer', answer_path(answer), method: :delete, data: {answer_id: answer.id}, remote: true
+      '  |
+      =link_to 'Edit answer', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+    -if current_user&.is_author?(@question) && !answer.best?
+      '  |
+      =link_to 'Mark as best', set_best_answer_path(answer), id: "set-best-answer-link-#{ answer.id }", method: :patch, remote: true

@@ -8,13 +8,13 @@ require("turbolinks").start();
 require("@rails/activestorage").start();
 require("channels");
 require("jquery");
+require("bootstrap/dist/js/bootstrap");
 require("packs/answers");
 require("packs/questions");
 require("packs/direct_uploads");
 require("packs/gist-async");
 require("packs/vote");
 import "cocoon-js";
-
 
 // Uncomment to copy all static images under ../images to the output folder and reference
 // them with the image_pack_tag helper in views (e.g <%= image_pack_tag 'rails.png' %>)

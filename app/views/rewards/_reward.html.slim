@@ -1,12 +1,12 @@
-.rewards
-  ul
-    li.reward_title
-      = reward.title
-    li
-      = image_tag reward.image, width: '100', class: 'reward_image' if reward.image.attached?
-    p
-    'Reward for question:
-    = reward.question.title
-    p
-      'Achieved at:
-      = reward.created_at
+.col-sm-4
+  .card.mt-3
+    = image_tag reward.image, class: 'card-image-top' if reward.image.attached?
+    .card-body
+      h5.reward_title.card-title
+        = reward.title
+      p
+      'Reward for question:
+      = reward.question.title
+      p
+        'Achieved at:
+        = reward.created_at

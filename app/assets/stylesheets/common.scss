@@ -1,6 +1,16 @@
+* {
+  margin: 0;
+  padding: 0;
+}
 .hidden { display: none }
 
-.best-answer { color: green }
+.best-answer .card-header {
+  color: #28a745;
+  border-color: transparent;
+  text-align: end;
+  background-color: transparent;
+}
+
 
 .disabled {
   pointer-events: none;
@@ -14,4 +24,9 @@
   padding: 2px;
   border: 1px solid darkslategray;
   border-radius: 3px;
+}
+
+li {
+  list-style: none;
+  margin-left: 1em;
 }

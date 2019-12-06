@@ -17,13 +17,12 @@ feature 'User can edit own question', %q{
       visit question_path(question)
       click_on 'Edit question'
       within "#edit-question-#{question.id}" do
-        expect(page).to have_field('Title', with: question.title)
-        expect(page).to have_field('Body', with: question.body)
-        fill_in 'Title', with: 'Another title'
-        fill_in 'Body', with: 'New body'
+        expect(page).to have_field('Question title', with: question.title)
+        expect(page).to have_field('Question text', with: question.body)
+        fill_in 'Question title', with: 'Another title'
+        fill_in 'Question text', with: 'New body'
         click_on 'Save'
       end
-      expect(page).to have_content 'Question was successfully updated.'
       expect(page).to have_content 'Another title'
       expect(page).to have_content 'New body'
 
@@ -34,7 +33,7 @@ feature 'User can edit own question', %q{
       visit question_path(question)
       click_on 'Edit question'
       within "#edit-question-#{question.id}" do
-        fill_in 'Title', with: ''
+        fill_in 'Question title', with: ''
         click_on 'Save'
       end
       expect(page).to have_content "Title can't be blank"
@@ -47,7 +46,7 @@ feature 'User can edit own question', %q{
 
       within "#edit-question-#{question.id}" do
         expect(page).to have_field 'question_files'
-        attach_file 'Files', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+        attach_file 'Attach files?', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
         click_on 'Save'
       end
       within "#question-#{question.id}" do
@@ -98,9 +97,7 @@ feature 'User can edit own question', %q{
         fill_in 'Url', with: 'invalid'
         click_on 'Save'
       end
-      within "#question-#{question.id}" do
-        expect(page).to have_content 'Links url must be a valid URL format'
-      end
+      expect(page).to have_content 'Links url must be a valid URL format'
     end
 
     scenario 'author trying to attach gist link to own question' do

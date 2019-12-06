@@ -15,13 +15,12 @@ feature 'Edit answer', %q{
       visit question_path(question)
       click_on 'Edit answer'
       within '.answers' do
-        expect(page).to have_field('Body', with: answer.body)
-        fill_in 'Body', with: 'Another text'
+        expect(page).to have_field('Answer text', with: answer.body)
+        fill_in 'Answer text', with: 'Another text'
         click_on 'Save'
         expect(page).to have_content 'Another text'
         expect(page).to_not have_field 'Body'
       end
-      expect(page).to have_content 'Answer was successfully updated.'
     end
 
     scenario 'edit own answer with invalid params' do
@@ -29,8 +28,8 @@ feature 'Edit answer', %q{
       visit question_path(question)
       click_on 'Edit answer'
       within '.answers' do
-        expect(page).to have_field('Body', with: answer.body)
-        fill_in 'Body', with: ''
+        expect(page).to have_field('Answer text', with: answer.body)
+        fill_in 'Answer text', with: ''
         click_on 'Save'
       end
       expect(page).to have_content "Body can't be blank"
@@ -43,7 +42,7 @@ feature 'Edit answer', %q{
 
       within "#edit-answer-#{answer.id}" do
         expect(page).to have_field 'answer_files'
-        attach_file 'Files', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+        attach_file 'Attach files?', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
         click_on 'Save'
       end
       within "#answer-#{answer.id}" do
