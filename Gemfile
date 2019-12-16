@@ -30,7 +30,6 @@ gem 'bootsnap', '>= 1.4.2', require: false
 gem 'slim-rails'
 gem 'devise'
 gem 'cocoon'
-gem 'skim'
 gem 'gon'
 
 group :development, :test do

@@ -2,6 +2,7 @@ class Answer < ApplicationRecord
 
   include WithLinks
   include Votable
+  include Commentable
 
   has_many_attached :files
   belongs_to :question
