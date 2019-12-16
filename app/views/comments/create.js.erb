@@ -1,0 +1,7 @@
+$('.<%= "#{@comment.commentable_type.downcase}-comments-errors" %>').html('<%= render 'shared/errors', resource: @comment %>');
+<% if @comment.persisted? %>
+  $('#<%= "#{@comment.commentable_type.downcase}-#{@comment.commentable_id}-comments" %>').append('<%= j render @comment %>');
+  $('input#<%= "new-#{@comment.commentable_type.downcase}-comment-body" %>').val('')
+  $('.new-comment-form').addClass('hidden')
+  $('.new-comment-link').show()
+<% end %>

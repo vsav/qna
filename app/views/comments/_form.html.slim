@@ -1,0 +1,9 @@
+= form_with model: [commentable, Comment.new], class: 'new-comment-form mt-3 hidden',
+        html: { id: "new-#{commentable.class.name.downcase}-#{commentable.id}-comment" }, remote: true do |f|
+  div class = "#{commentable.class.name.downcase}-comments-errors"
+    = render 'shared/errors', resource: commentable
+  .form-group
+    = f.label :body, 'Comment text'
+    = f.text_area :body, class: 'form-control', id: "new-#{commentable.class.name.downcase}-comment-body"
+
+  p = f.submit 'Create comment', class: 'btn btn-primary btn-lg btn-block'
