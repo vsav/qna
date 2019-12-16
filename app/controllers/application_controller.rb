@@ -5,6 +5,6 @@ class ApplicationController < ActionController::Base
   private
 
   def set_gon_user
-    gon.user_id = current_user&.id || 0
+    gon.user_id = current_user&.id
   end
 end

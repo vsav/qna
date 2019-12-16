@@ -11,13 +11,11 @@
     = render 'shared/rating', resource: answer
 
   div id = "answer-#{ answer.id }-files"
-    - if answer.files.attached?
-      ul
-        = render 'shared/files', resource: answer
+    ul
+      = render 'shared/files', resource: answer
   div id = "answer-#{ answer.id }-links"
-    - if answer.links.present?
-      ul
-        = render 'shared/links', resource: answer
+    ul
+      = render 'shared/links', resource: answer
 
   -if current_user&.is_author?(answer)
     = form_with model: answer, class: 'hidden mt-3', html: {id: "edit-answer-#{answer.id}"} do |f|
@@ -45,7 +43,6 @@
 
 
   div id = "answer-#{ answer.id }-comments"
-  - if answer.comments.present?
     = render answer.comments
 
   - if current_user

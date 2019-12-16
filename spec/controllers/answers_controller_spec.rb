@@ -57,6 +57,12 @@ RSpec.describe AnswersController, type: :controller do
         post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid), format: :js }
         expect(response).to render_template :create
       end
+
+      it 'not broadcast to channel' do
+        expect do
+          post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid), format: :js }
+        end.to_not have_broadcasted_to("questions/#{question.id}/answers")
+      end
     end
 
     context 'POST #create as guest' do

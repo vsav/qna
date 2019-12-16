@@ -30,12 +30,10 @@
       = f.submit 'Save', class: 'btn btn-primary btn-lg btn-block'
 
   div id = "question-#{ question.id }-files"
-    - if question.files.attached?
-      = render 'shared/files', resource: question
+    = render 'shared/files', resource: question
 
   div id = "question-#{ question.id }-links"
-    - if question.links.present?
-      = render 'shared/links', resource: question
+    = render 'shared/links', resource: question
 
   - if question.reward.present?
     .media.ml-3 id = "question-#{ question.id }-reward"
@@ -53,7 +51,6 @@
       =link_to 'Edit question', '#', class: 'edit-question-link', data: { question_id: question.id }
 
   div id = "question-#{ question.id }-comments"
-  - if question.comments.present?
     = render question.comments
 
   - if current_user
