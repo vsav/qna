@@ -37,6 +37,13 @@ RSpec.describe AnswersController, type: :controller do
         post :create, params: { question_id: question, answer: attributes_for(:answer), format: :js }
         expect(response).to render_template :create
       end
+
+      it 'broadcast to channel' do
+        expect do
+          post :create, params: { question_id: question, answer: attributes_for(:answer), format: :js }
+        end.to have_broadcasted_to("questions/#{question.id}/answers")
+      end
+
     end
 
     context 'with invalid attributes' do

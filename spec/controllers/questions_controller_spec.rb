@@ -86,6 +86,12 @@ RSpec.describe QuestionsController, type: :controller do
         question = Question.order(created_at: :desc).first
         expect(question.user).to eq user
       end
+
+      it 'broadcast to channel' do
+        expect do
+          post :create, params: { question: attributes_for(:question), format: :js }
+        end.to have_broadcasted_to("questions")
+      end
     end
 
     context 'with invalid attributes' do
