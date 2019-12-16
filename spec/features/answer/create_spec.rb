@@ -5,9 +5,9 @@ feature 'Authenticated can answer the questions', %q{
   As an authenticated user
   I'd like to be able to answer the questions
 }, js: true do
-  given(:user) { create(:user) }
-  given(:question) { create(:question, user: user) }
-  given(:answer) { create(:answer, question: question, user: user) }
+  given!(:user) { create(:user) }
+  given!(:question) { create(:question, user: user) }
+  given!(:answer) { create(:answer, question: question, user: user) }
 
   describe 'Authenticated user' do
     background do
@@ -16,6 +16,7 @@ feature 'Authenticated can answer the questions', %q{
     end
 
     scenario 'create answer for question' do
+
       fill_in 'Answer text', with: 'Answer text'
       click_on 'Create answer'
 
@@ -81,6 +82,49 @@ feature 'Authenticated can answer the questions', %q{
       visit question_path(question)
       expect(page).to have_content 'You need to sign in or sign up to answer the questions'
       expect(page).to_not have_link 'Create answer'
+    end
+  end
+
+  describe 'Answers in multiple browsers' do
+    scenario 'user can create answer for question and it will be available in another user browser' do
+      using_session('guest') do
+        visit question_path(question)
+        expect(page).to have_no_content 'ActionCable Answer text'
+      end
+      using_session('user') do
+        sign_in(user)
+        visit question_path(question)
+
+        fill_in 'Answer text', with: 'ActionCable Answer text'
+        click_on 'Create answer'
+
+        expect(page).to have_content 'ActionCable Answer text'
+        expect(current_path).to eq question_path(question)
+      end
+      using_session('guest') do
+        expect(page).to have_content 'ActionCable Answer text'
+      end
+    end
+
+    scenario 'if answer have errors it will not appear on page and other browser' do
+      using_session('guest') do
+        visit question_path(question)
+        expect(page).to have_no_content '.answer'
+      end
+      using_session('user') do
+        sign_in(user)
+        visit question_path(question)
+        expect(page).to have_no_content '.answer'
+
+        fill_in 'Answer text', with: ''
+        click_on 'Create answer'
+
+        expect(page).to have_content "Body can't be blank"
+
+      end
+      using_session('guest') do
+        expect(page).to_not have_content '.anwer'
+      end
     end
   end
 end

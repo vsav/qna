@@ -91,12 +91,61 @@ feature 'User can create question', %q{
       expect(page).to have_content 'Reward for best answer'
       expect(page.find('.reward_image')['src']).to have_content 'image.jpg'
     end
-
   end
 
   scenario 'Unauthenticated user tries to ask a question' do
     visit questions_path
     expect(page).to have_content 'You need to sign in or sign up to ask questions'
     expect(page).to_not have_link 'Ask question'
+  end
+
+  describe 'Questions in multiple browsers' do
+    scenario 'user can create question and it will be available in another user browser', js: true do
+      using_session('guest') do
+        visit questions_path
+        expect(page).to have_no_content 'ActionCable Question'
+      end
+      using_session('user') do
+        sign_in(user)
+        visit questions_path
+
+        click_on 'Ask question'
+
+        fill_in 'Question title', with: 'ActionCable Question'
+        fill_in 'Question text', with: 'text text text'
+        click_on 'Ask question'
+
+        expect(page).to have_content 'ActionCable Question'
+        expect(page).to have_content 'text text text'
+
+      end
+      using_session('guest') do
+        expect(page).to have_content 'ActionCable Question'
+      end
+    end
+
+    scenario 'if question have errors it will not appear on page and other browser' do
+      using_session('guest') do
+        visit questions_path
+        expect(page).to have_no_content '.question-header'
+      end
+      using_session('user') do
+        sign_in(user)
+        visit questions_path
+        expect(page).to have_no_content '.question-header'
+
+        click_on 'Ask question'
+        fill_in 'Question title', with: ''
+        fill_in 'Question text', with: ''
+        click_on 'Ask question'
+
+        expect(page).to have_content "Title can't be blank"
+        expect(page).to have_content "Body can't be blank"
+
+      end
+      using_session('guest') do
+        expect(page).to_not have_content '.question-header'
+      end
+    end
   end
 end
