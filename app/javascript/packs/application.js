@@ -14,6 +14,8 @@ require("packs/questions");
 require("packs/direct_uploads");
 require("packs/gist-async");
 require("packs/vote");
+require("packs/comments");
+
 import "cocoon-js";
 
 // Uncomment to copy all static images under ../images to the output folder and reference
