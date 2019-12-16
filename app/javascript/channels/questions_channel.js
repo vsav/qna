@@ -6,10 +6,7 @@ consumer.subscriptions.create('QuestionsChannel', {
     },
 
     received: function(data) {
-
-        if (gon.user_id !== data.question.user_id) {
-
-            $('.questions ul.list-group-flush').append(data.html);
-        }
+        if (gon.user_id === data.question.user_id) return;
+        $('.questions ul.list-group-flush').append(data.html);
     }
 });

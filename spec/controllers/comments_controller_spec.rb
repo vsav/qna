@@ -47,6 +47,14 @@ RSpec.describe CommentsController, type: :controller do
 
           expect(response).to render_template :create
         end
+
+        it 'do not starts broadcast to CommentsChannel' do
+
+          expect {
+            post :create, params: { comment: attributes_for(:comment, :invalid), question_id: question.id, user: user }, format: :js
+          }.to_not have_broadcasted_to("questions/#{question.id}/comments")
+        end
+
       end
     end
 
@@ -90,6 +98,11 @@ RSpec.describe CommentsController, type: :controller do
           post :create, params: { comment: attributes_for(:comment, :invalid), question: question, answer_id: answer.id, user: user }, format: :js
 
           expect(response).to render_template :create
+        end
+        it 'do not starts broadcast to CommentsChannel' do
+          expect {
+            post :create, params: { comment: attributes_for(:comment, :invalid), question: question, answer_id: answer.id, user: user }, format: :js
+          }.to_not have_broadcasted_to("questions/#{question.id}/comments")
         end
       end
     end
