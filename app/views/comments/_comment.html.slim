@@ -1,0 +1,7 @@
+= content_tag(:div, id: "comment-#{ comment.id }", class: "comment mt-3")
+  div id = "comment-#{ comment.id }-errors"
+    = render 'shared/errors', resource: comment
+  p.lead id = "comment-#{ comment.id }-body"
+    = comment.body
+  footer class = 'blockquote-footer'
+    = "by #{comment.user.email}"
