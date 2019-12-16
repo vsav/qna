@@ -5,6 +5,7 @@ class AnswersController < ApplicationController
   before_action :find_question, only: [:create]
   before_action :find_answer, only: [:update, :destroy, :set_best]
   before_action :authenticate_user!, except: [:index, :show]
+  after_action :publish_answer, only: :create
 
   def create
     @answer = Answer.create(answer_params.merge(question: @question,
@@ -41,6 +42,25 @@ class AnswersController < ApplicationController
     end
   end
 
+  def publish_answer
+    return if @answer.errors.any?
+
+    ActionCable.server.broadcast(
+      "questions/#{@answer.question_id}/answers",
+      html: html(@answer),
+      answer: @answer,
+      question: @answer.question
+    )
+  end
+
+  def html(answer)
+    wardenize
+    @job_renderer.render(
+      partial: 'answers/answer',
+      locals: { answer: answer }
+    )
+  end
+
   private
 
   def find_question
@@ -54,4 +74,12 @@ class AnswersController < ApplicationController
   def answer_params
     params.require(:answer).permit(:body, files: [], links_attributes: [:id, :name, :url, :_destroy])
   end
+
+  def wardenize
+    @job_renderer = ::AnswersController.renderer.new
+    renderer_env = @job_renderer.instance_eval { @env }
+    warden = ::Warden::Proxy.new(renderer_env, ::Warden::Manager.new(Rails.application))
+    renderer_env['warden'] = warden
+  end
+
 end
