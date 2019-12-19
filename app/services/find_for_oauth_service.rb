@@ -6,11 +6,11 @@ class FindForOauthService
   end
 
   def call
-    oauth_provider = OauthProvider.where(provider: auth.provider, uid: auth.uid.to_s).first
+    oauth_provider = OauthProvider.find_by(provider: auth.provider, uid: auth.uid.to_s)
     return oauth_provider.user if oauth_provider
 
     email = auth.info[:email]
-    user = User.where(email: email).first
+    user = User.find_by(email: email)
     if user
       user.oauth_providers.create!(provider: auth.provider, uid: auth.uid.to_s)
     elsif email
