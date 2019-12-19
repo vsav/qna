@@ -1,13 +1,17 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  # модель тестировать не обязательно, т.к. это делает devise
+
   it { should validate_presence_of :email }
   it { should validate_presence_of :password }
+  it { should allow_value('user@test.com').for(:email)}
+  it { should_not allow_value('user@test').for(:email)}
+  it { should_not allow_value('user').for(:email)}
   it { should have_many(:questions).dependent(:destroy) }
   it { should have_many(:answers).dependent(:destroy) }
   it { should have_many(:rewards).dependent(:destroy) }
   it { should have_many(:votes).dependent(:destroy) }
+  it { should have_many(:oauth_providers).dependent(:destroy) }
 
   describe 'user is_author?' do
     let(:user) { create(:user) }
@@ -63,6 +67,17 @@ RSpec.describe User, type: :model do
         expect(user2).to_not be_voted(answer)
       end
     end
+  end
 
+  describe '.find_for_oauth' do
+    let!(:user) { create(:user) }
+    let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '123123') }
+    let(:service) { double('FindForOauthService') }
+
+    it 'calls FindForOauthService' do
+      expect(FindForOauthService).to receive(:new).with(auth).and_return(service)
+      expect(service).to receive(:call)
+      User.find_for_oauth(auth)
+    end
   end
 end
