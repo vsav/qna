@@ -75,7 +75,6 @@ I want to be able to sign in or sign up with my social network accounts
       expect(page).to have_content "Email can't be blank"
       fill_in 'email', with: 'test'
       click_on 'Confirm'
-      save_and_open_page
       expect(page).to have_content "Email is invalid"
       expect(page).to have_content "Email must be a valid email format"
     end
