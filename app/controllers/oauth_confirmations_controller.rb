@@ -1,0 +1,28 @@
+class OauthConfirmationsController < Devise::ConfirmationsController
+  def new; end
+
+  def create
+    @email = oauth_confirmation_params[:email]
+    password = Devise.friendly_token[0, 10]
+    @user = User.new(email: @email, password: password, password_confirmation: password)
+
+    if @user.valid?
+      @user.send_confirmation_instructions
+      redirect_to root_path, notice: "Confirmation instructions has been sent to #{@email}"
+    else
+      render :new
+    end
+  end
+
+  private
+
+  def after_confirmation_path_for(resource_name, user)
+    user.oauth_providers.create(provider: session[:provider], uid: session[:uid])
+    sign_in user, event: :authentication
+    signed_in_root_path(@user)
+  end
+
+  def oauth_confirmation_params
+    params.permit(:email)
+  end
+end
