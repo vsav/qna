@@ -16,7 +16,10 @@ feature 'Guest can register', %q{
     fill_in 'Password confirmation', with: 'secret'
     click_on 'Sign up'
 
-    expect(page).to have_content 'Welcome! You have signed up successfully.'
+    expect(page).to have_content 'A message with a confirmation link has been sent to your email address. Please follow the link to activate your account.'
+    open_email('user@test.com')
+    current_email.click_link 'Confirm my account'
+    expect(page).to have_content 'Your email address has been successfully confirmed.'
   end
 
   scenario 'Guest trying to register with invalid data' do
