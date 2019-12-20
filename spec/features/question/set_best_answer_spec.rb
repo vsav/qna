@@ -8,11 +8,11 @@ feature 'User can mark answer for own question as best', %q{
 
   given!(:user) { create(:user) }
   given!(:user2) { create(:user) }
-  given!(:reward) {create(:reward, question: question)}
+  given!(:reward) { create(:reward, question: question) }
   given!(:question) { create(:question, user: user) }
-  given!(:answer1) { create(:answer, question: question, user: user) }
-  given!(:answer2) { create(:answer, question: question, user: user, best: true) }
-  given!(:answer3) { create(:answer, question: question, user: user) }
+  given!(:answer1) { create(:answer, question: question, user: user2) }
+  given!(:answer2) { create(:answer, question: question, user: user2, best: true) }
+  given!(:answer3) { create(:answer, question: question, user: user2) }
 
   describe 'Authenticated user' do
 
@@ -61,14 +61,14 @@ feature 'User can mark answer for own question as best', %q{
         expect(page).to have_link(href: "/answers/#{answer3.id}/set_best")
         find("a[href = '/answers/#{answer3.id}/set_best']").click
       end
-      visit user_rewards_path(user_id: user.id)
-      expect(page).to have_content(reward.title)
-      expect(page).to have_content(reward.question.title)
+      click_on 'View rewards'
+      expect(page).to_not have_content(reward.title)
+      expect(page).to_not have_content(reward.question.title)
       using_session(user2) do
         sign_in(user2)
         click_on 'View rewards'
-        expect(page).to_not have_content(reward.title)
-        expect(page).to_not have_content(reward.question.title)
+        expect(page).to have_content(reward.title)
+        expect(page).to have_content(reward.question.title)
       end
     end
 

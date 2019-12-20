@@ -139,8 +139,8 @@ RSpec.describe AnswersController, type: :controller do
         expect(answer.body).to_not eq 'new body'
       end
 
-      it 'renders redirects to root path' do
-        expect(response).to redirect_to root_path
+      it 'returns status 403 forbidden' do
+        expect(response).to have_http_status(403)
       end
     end
 
@@ -181,9 +181,9 @@ RSpec.describe AnswersController, type: :controller do
         expect { delete :destroy, params: { question_id: question, id: answer }, format: :js }.to_not change(Answer, :count)
       end
 
-      it 'redirects to root path' do
+      it 'returns status 403 forbidden' do
         delete :destroy, params: { question_id: question, id: answer }, format: :js
-        expect(response).to redirect_to root_path
+        expect(response).to have_http_status(403)
       end
     end
 
@@ -201,12 +201,12 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'PATCH #best' do
-    let!(:answer1) { create(:answer, question: question, user: user, best: true) }
-    let!(:answer2) { create(:answer, question: question, user: user) }
+    let!(:answer1) { create(:answer, question: question, user: user2, best: true) }
+    let!(:answer2) { create(:answer, question: question, user: user2) }
     context 'as author' do
       before do
         sign_in(user)
-        patch :set_best, params: { id: answer2, format: :js }
+        patch :set_best, params: { id: answer2.id, format: :js }
       end
 
       it 'marks answer as best' do
@@ -241,8 +241,8 @@ RSpec.describe AnswersController, type: :controller do
         expect(answer1).to be_best
       end
 
-      it 'redirects to root path' do
-        expect(response).to redirect_to root_path
+      it 'returns status 403 forbidden' do
+        expect(response).to have_http_status(403)
       end
     end
 

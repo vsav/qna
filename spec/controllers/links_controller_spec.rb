@@ -8,11 +8,9 @@ RSpec.describe LinksController, type: :controller do
 
   describe 'DELETE #destroy' do
 
-    before do
-      sign_in(user)
-    end
-
     context 'As author' do
+
+      before { sign_in(user) }
 
       it 'deletes link' do
         expect { delete :destroy, params: { id: question.links.first }, format: :js }.to change(question.links, :count).by(-1)
@@ -33,15 +31,13 @@ RSpec.describe LinksController, type: :controller do
         expect { delete :destroy, params: { id: question.links.first }, format: :js }.to_not change(question.links, :count)
       end
 
-      it 'renders destroy template' do
+      it 'returns 403 status' do
         delete :destroy, params: { id: question.links.first }, format: :js
-        expect(response).to render_template :destroy
+        expect(response).to have_http_status(403)
       end
     end
 
     context 'As guest' do
-
-      before { sign_out(user) }
 
       it 'do not deletes link' do
         expect { delete :destroy, params: { id: question.links.first }, format: :js }.to_not change(question.links, :count)
