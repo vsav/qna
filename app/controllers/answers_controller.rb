@@ -7,6 +7,8 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
   after_action :publish_answer, only: :create
 
+  authorize_resource
+
   def create
     @answer = Answer.create(answer_params.merge(question: @question,
                                                 user: current_user))
@@ -18,28 +20,17 @@ class AnswersController < ApplicationController
 
   def update
     @question = @answer.question
-    if current_user.is_author?(@answer)
-      @answer.update(answer_params)
-    else
-      redirect_to root_path
-    end
+    @answer.update(answer_params)
   end
 
   def destroy
-    if current_user.is_author?(@answer)
-      @answer.destroy
-    else
-      redirect_to root_path
-    end
+    @answer.destroy
   end
 
   def set_best
     @question = @answer.question
-    if current_user.is_author?(@question)
-      @answer.mark_best!
-    else
-      redirect_to root_path
-    end
+    authorize! :set_best, @answer
+    @answer.mark_best!
   end
 
   def publish_answer
