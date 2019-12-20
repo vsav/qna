@@ -1,7 +1,7 @@
 - resource.files.each do |file|
   li id = "file-#{file.id}"
     = link_to file.filename.to_s, url_for(file)
-    -if current_user&.is_author?(resource)
+    -if can? :destroy, file
       = link_to 'Remove file', attachment_path(file),
               class: 'delete-attachment-link ml-2',
               method: :delete,
