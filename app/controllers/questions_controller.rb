@@ -6,6 +6,8 @@ class QuestionsController < ApplicationController
   before_action :find_question, only: [:show, :edit, :update, :destroy]
   after_action :publish_question, only: :create
 
+  authorize_resource
+
   def index
     @questions = Question.all
   end
@@ -36,21 +38,12 @@ class QuestionsController < ApplicationController
   def edit; end
 
   def update
-    if current_user.is_author?(@question)
-      @question.update(question_params)
-    else
-      redirect_to root_path
-    end
+    @question.update(question_params)
   end
 
   def destroy
-    if current_user.is_author?(@question)
-      @question.destroy
-      redirect_to questions_path, notice: 'Question was successfully deleted.'
-    else
-      flash[:alert] = 'You do not have permission to do that'
-      render :show
-    end
+    @question.destroy
+    redirect_to questions_path, notice: 'Question was successfully deleted.'
   end
 
   def publish_question
