@@ -44,7 +44,7 @@
 
   .mt-3.ml-3.mb-3 id = "question-#{ question.id }-rating"
     = render 'shared/rating', resource: question
-  - if current_user&.is_author?(question)
+  - if can? :update, question
     .author-links.ml-3.mb-3
       =link_to 'Delete question', question_path(question), method: :delete, data: {question_id: question.id}, remote: true
       '  |
@@ -53,7 +53,7 @@
   div id = "question-#{ question.id }-comments"
     = render question.comments
 
-  - if current_user
+  - if can? :create, Comment
     = link_to 'Leave comment', '#', class: 'new-comment-link ml-3 mb-3 mt-3',
             data: { commentable_type: 'question', commentable_id: question.id }
     = render 'comments/form', commentable: question

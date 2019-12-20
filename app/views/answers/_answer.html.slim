@@ -17,7 +17,7 @@
     ul
       = render 'shared/links', resource: answer
 
-  -if current_user&.is_author?(answer)
+  -if can? :update, answer
     = form_with model: answer, class: 'hidden mt-3', html: {id: "edit-answer-#{answer.id}"} do |f|
       .form-group
         = f.label :body, 'Answer text'
@@ -37,15 +37,15 @@
       =link_to 'Delete answer', answer_path(answer), method: :delete, data: {answer_id: answer.id}, remote: true
       '  |
       =link_to 'Edit answer', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
-      -if current_user&.is_author?(@question) && !answer.best?
-        '  |
-        =link_to 'Mark as best', set_best_answer_path(answer), id: "set-best-answer-link-#{ answer.id }", method: :patch, remote: true
+  -if can? :set_best, answer
+    .mark-best-link.ml-3
+      =link_to 'Mark as best', set_best_answer_path(answer), id: "set-best-answer-link-#{ answer.id }", method: :patch, remote: true
 
 
   div id = "answer-#{ answer.id }-comments"
     = render answer.comments
 
-  - if current_user
+  - if can? :create, Comment
     = link_to 'Leave comment', '#', class: 'new-comment-link ml-3 mb-3 mt-3',
             data: {commentable_type: 'answer', commentable_id: answer.id}
     = render 'comments/form', commentable: answer
