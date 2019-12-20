@@ -189,8 +189,8 @@ RSpec.describe QuestionsController, type: :controller do
         expect(question.body).to_not eq 'new body'
       end
 
-      it 'redirects to root path' do
-        expect(response).to redirect_to root_path
+      it 'returns status 403 forbidden' do
+        expect(response).to have_http_status(403)
       end
     end
 
@@ -232,12 +232,7 @@ RSpec.describe QuestionsController, type: :controller do
 
       it 'do not deletes the question' do
         expect { delete :destroy, params: { id: question } }.to_not change(Question, :count)
-        expect(flash[:alert]).to match('You do not have permission to do that')
-      end
-
-      it 're-renders show view' do
-        delete :destroy, params: { id: question }
-        expect(response).to render_template :show
+        expect(flash[:alert]).to match('You are not authorized to access this page.')
       end
     end
 
