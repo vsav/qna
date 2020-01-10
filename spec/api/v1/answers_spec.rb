@@ -2,9 +2,9 @@ require 'rails_helper'
 
 describe 'Answers API', type: :request do
   let(:headers) { { "ACCEPT" => "application/json" } }
-  let(:user) { build(:user) }
-  let(:access_token) { create(:access_token) }
-  let!(:question) { build(:question, user: user) }
+  let!(:user) { create(:user) }
+  let(:access_token) { create(:access_token, resource_owner_id: user.id) }
+  let!(:question) { create(:question, user: user) }
   let!(:answers) { create_list(:answer, 2, question: question, user: user) }
   let(:answer) { answers.first }
 
@@ -44,9 +44,6 @@ describe 'Answers API', type: :request do
     end
 
     context 'Authorized' do
-      let!(:user) { build(:user) }
-      let!(:question) { build(:question, user: user) }
-      let!(:answer) { build(:answer, question: question) }
       let!(:links) { create_list(:link, 2, :valid_url, linkable: answer) }
       let!(:comments) { create_list(:comment, 2, commentable: answer, user: user) }
 

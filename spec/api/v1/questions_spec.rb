@@ -2,8 +2,8 @@ require 'rails_helper'
 
 describe 'Questions API', type: :request do
   let(:headers) { { "ACCEPT" => "application/json" } }
-  let(:access_token) { create(:access_token) }
-  let(:user) { build(:user) }
+  let(:user) { create(:user) }
+  let(:access_token) { create(:access_token, resource_owner_id: user.id) }
   let!(:questions) { create_list(:question, 2, user: user) }
   let(:question) { questions.first }
 

@@ -87,5 +87,9 @@ RSpec.describe Ability do
       it { should_not be_able_to :set_best, answer3 }
     end
 
+    describe '/api/v1/profiles/me' do
+      it { should be_able_to :me, user }
+    end
+
   end
 end
