@@ -21,6 +21,10 @@ class Ability
 
     can :read, Reward
 
+    can :me, User
+
+    can :read, User
+
     can :create, [Question, Answer, Comment]
 
     can [:update, :destroy], [Question, Answer], { user_id: user.id}
