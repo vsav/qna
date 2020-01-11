@@ -10,6 +10,8 @@ class Answer < ApplicationRecord
   validates :body, presence: true
   validates :best, uniqueness: { scope: :question_id, best: true }, if: :best?
 
+  after_create :new_answer_notice
+
   default_scope -> { order('best DESC, created_at') }
   scope :best, -> { where(best: true) }
 
@@ -19,5 +21,11 @@ class Answer < ApplicationRecord
       update!(best: true)
       question.reward&.update!(user: user)
     end
+  end
+
+  private
+
+  def new_answer_notice
+    NewAnswersJob.perform_later(self)
   end
 end

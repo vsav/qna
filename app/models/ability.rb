@@ -25,9 +25,11 @@ class Ability
 
     can :read, User
 
-    can :create, [Question, Answer, Comment]
+    can :create, [Question, Answer, Comment, Subscription]
 
     can [:update, :destroy], [Question, Answer], { user_id: user.id}
+
+    can :destroy, Subscription, user_id: user.id
 
     can :destroy, Link do |link|
       user.is_author?(link.linkable)
