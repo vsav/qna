@@ -34,3 +34,4 @@ yarn-debug.log*
 .idea
 .env
 credentials.yml.enc
+dump.rdb
