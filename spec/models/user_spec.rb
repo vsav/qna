@@ -12,6 +12,7 @@ RSpec.describe User, type: :model do
   it { should have_many(:rewards).dependent(:destroy) }
   it { should have_many(:votes).dependent(:destroy) }
   it { should have_many(:oauth_providers).dependent(:destroy) }
+  it { should have_many(:subscriptions).dependent(:destroy) }
 
   describe 'user is_author?' do
     let(:user) { create(:user) }
@@ -78,6 +79,23 @@ RSpec.describe User, type: :model do
       expect(FindForOauthService).to receive(:new).with(auth).and_return(service)
       expect(service).to receive(:call)
       User.find_for_oauth(auth)
+    end
+  end
+
+  describe '.subscribed?' do
+    let(:user) { create(:user) }
+    let(:user2) { create(:user) }
+    let(:question) { create(:question, user: user) }
+    let(:question2) { create(:question) }
+
+    it 'should be subscribed' do
+      expect(user.subscribed?(question)).to be_truthy
+      expect(user.subscribed?(question2)).to be_falsey
+    end
+
+    it 'should not be subscribed' do
+      expect(user2.subscribed?(question)).to be_falsey
+      expect(user2.subscribed?(question2)).to be_falsey
     end
   end
 end
