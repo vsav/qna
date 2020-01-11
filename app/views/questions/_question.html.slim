@@ -1,8 +1,10 @@
 = content_tag(:div, id: "question-#{ question.id }", class: 'question card mt-3')
   div id = "question-#{ question.id }-errors"
     = render 'shared/errors', resource: question
-  .card-header id = "question-#{ question.id }-title"
+  .card-header.question-header id = "question-#{ question.id }-title"
     = question.title
+    - if can?(:create, Subscription)
+      = render 'subscriptions/subscription', question: question
   .card-body id = "question-#{ question.id }-body"
     blockquote class = 'blockquote mb-1'
       = question.body
