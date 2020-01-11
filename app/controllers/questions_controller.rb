@@ -4,6 +4,7 @@ class QuestionsController < ApplicationController
 
   before_action :authenticate_user!, except: [:index, :show]
   before_action :find_question, only: [:show, :edit, :update, :destroy]
+  before_action :find_subscription, only: [:show, :edit, :update]
   after_action :publish_question, only: :create
 
   authorize_resource
@@ -72,5 +73,9 @@ class QuestionsController < ApplicationController
   def question_params
     params.require(:question).permit(:title, :body, files: [], links_attributes: [:id, :name, :url, :_destroy],
                                      reward_attributes: [:title, :image])
+  end
+
+  def find_subscription
+    @subscription = @question.subscriptions.find_by(user_id: current_user&.id)
   end
 end
