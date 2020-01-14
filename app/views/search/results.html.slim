@@ -1,0 +1,7 @@
+h4.mt-2.text-muted Search results for '#{params[:input]}':
+.search-results
+  - if @result.empty?
+    p Nothing found
+  - else
+    - @result.each do |result|
+      = render partial: result.class.to_s.downcase, locals: { resource: result }

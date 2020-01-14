@@ -1,5 +1,6 @@
 .navbar.navbar-dark.bg-dark
   = link_to 'Home', root_path, class: 'navbar-brand'
+  = render 'search/form'
   .navbar-text
     -if can? :read, Reward
       = "welcome, #{current_user.email}"
