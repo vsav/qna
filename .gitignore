@@ -35,3 +35,5 @@ yarn-debug.log*
 .env
 credentials.yml.enc
 dump.rdb
+config/*.sphinx.conf
+db/sphinx
