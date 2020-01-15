@@ -2,9 +2,9 @@ class SearchService
 
   RESOURCES = %w[Question Answer Comment User]
 
-  def self.call(params)
-    @input = params[:input]
-    @resource = params[:resource]
-    RESOURCES.include?(@resource) ? @resource.constantize.search(@input) : ThinkingSphinx.search(@input)
+  def self.call(query:, resource: nil)
+    klass = RESOURCES.include?(resource) ? resource.constantize : ThinkingSphinx
+    escaped_query = ThinkingSphinx::Query.escape(query)
+    klass.search escaped_query
   end
 end

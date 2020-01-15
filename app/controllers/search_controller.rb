@@ -3,12 +3,7 @@ class SearchController < ApplicationController
   skip_authorization_check only: :results
 
   def results
-    @result = SearchService.call(search_params)
+    @result = SearchService.call(query: params[:query], resource: params[:resource])
   end
 
-  private
-
-  def search_params
-    params.permit(:input, :resource)
-  end
 end

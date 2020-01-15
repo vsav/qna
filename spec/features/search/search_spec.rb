@@ -18,7 +18,7 @@ feature 'User can search', %q{
       scenario "#{resource} search" do
         ThinkingSphinx::Test.run do
           within '.search-form' do
-            fill_in :input, with: 'test'
+            fill_in :query, with: 'test'
             select resource, from: :resource
             click_on 'Search'
           end
@@ -35,7 +35,7 @@ feature 'User can search', %q{
       ThinkingSphinx::Test.run do
         within '.search-form' do
           select 'Entire site', from: :resource
-          fill_in :input, with: 'test'
+          fill_in :query, with: 'test'
           click_on 'Search'
         end
 
@@ -53,7 +53,7 @@ feature 'User can search', %q{
       ThinkingSphinx::Test.run do
         within '.search-form' do
           select 'Entire site', from: :resource
-          fill_in :input, with: 'zzz'
+          fill_in :query, with: 'zzz'
           click_on 'Search'
         end
 
