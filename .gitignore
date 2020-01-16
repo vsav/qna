@@ -33,7 +33,6 @@ yarn-debug.log*
 
 .idea
 .env
-credentials.yml.enc
 dump.rdb
 config/*.sphinx.conf
 db/sphinx
