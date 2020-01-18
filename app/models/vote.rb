@@ -1,6 +1,6 @@
 class Vote < ApplicationRecord
   belongs_to :user
-  belongs_to :votable, polymorphic: true
+  belongs_to :votable, polymorphic: true, touch: true
 
   validates :rating, presence: true
   validates :user, uniqueness: { scope: [:votable_type, :votable_id], message: 'you can like/dislike only once' }
