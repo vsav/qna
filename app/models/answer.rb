@@ -5,7 +5,7 @@ class Answer < ApplicationRecord
   include Commentable
 
   has_many_attached :files
-  belongs_to :question
+  belongs_to :question, touch: true
   belongs_to :user
   validates :body, presence: true
   validates :best, uniqueness: { scope: :question_id, best: true }, if: :best?
