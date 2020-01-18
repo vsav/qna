@@ -1,15 +1,16 @@
-= content_tag(:div, id: "question-#{ question.id }", class: 'question card mt-3')
-  div id = "question-#{ question.id }-errors"
-    = render 'shared/errors', resource: question
-  .card-header.question-header id = "question-#{ question.id }-title"
-    = question.title
-    - if can?(:create, Subscription)
-      = render 'subscriptions/subscription', question: question
-  .card-body id = "question-#{ question.id }-body"
-    blockquote class = 'blockquote mb-1'
-      = question.body
-    footer class = 'blockquote-footer'
-      = "by #{question.user.email}"
+- cache question do
+  = content_tag(:div, id: "question-#{ question.id }", class: 'question card mt-3')
+    div id = "question-#{ question.id }-errors"
+      = render 'shared/errors', resource: question
+    .card-header.question-header id = "question-#{ question.id }-title"
+      = question.title
+      - if can?(:create, Subscription)
+        = render 'subscriptions/subscription', question: question
+    .card-body id = "question-#{ question.id }-body"
+      blockquote class = 'blockquote mb-1'
+        = question.body
+      footer class = 'blockquote-footer'
+        = "by #{question.user.email}"
 
     = form_with model: question, class: 'hidden', html: {id: "edit-question-#{question.id}"} do |f|
       .form-group
@@ -31,31 +32,31 @@
 
       = f.submit 'Save', class: 'btn btn-primary btn-lg btn-block'
 
-  div id = "question-#{ question.id }-files"
-    = render 'shared/files', resource: question
+    div id = "question-#{ question.id }-files"
+      = render 'shared/files', resource: question
 
-  div id = "question-#{ question.id }-links"
-    = render 'shared/links', resource: question
+    div id = "question-#{ question.id }-links"
+      = render 'shared/links', resource: question
 
-  - if question.reward.present?
-    .media.ml-3 id = "question-#{ question.id }-reward"
-      = image_tag question.reward.image, class: 'reward_image mr-3', width: '100px' if question.reward.image.attached?
-      .media-body
-        h5.reward_title.mt-0 Reward:
-        = question.reward.title
+    - if question.reward.present?
+      .media.ml-3 id = "question-#{ question.id }-reward"
+        = image_tag question.reward.image, class: 'reward_image mr-3', width: '100px' if question.reward.image.attached?
+        .media-body
+          h5.reward_title.mt-0 Reward:
+          = question.reward.title
 
-  .mt-3.ml-3.mb-3 id = "question-#{ question.id }-rating"
-    = render 'shared/rating', resource: question
-  - if can? :update, question
-    .author-links.ml-3.mb-3
-      =link_to 'Delete question', question_path(question), method: :delete, data: {question_id: question.id}, remote: true
-      '  |
-      =link_to 'Edit question', '#', class: 'edit-question-link', data: { question_id: question.id }
+    .mt-3.ml-3.mb-3 id = "question-#{ question.id }-rating"
+      = render 'shared/rating', resource: question
+    - if can? :update, question
+      .author-links.ml-3.mb-3
+        =link_to 'Delete question', question_path(question), method: :delete, data: {question_id: question.id}, remote: true
+        '  |
+        =link_to 'Edit question', '#', class: 'edit-question-link', data: { question_id: question.id }
 
-  div id = "question-#{ question.id }-comments"
-    = render question.comments
+    div id = "question-#{ question.id }-comments"
+      = render question.comments
 
-  - if can? :create, Comment
-    = link_to 'Leave comment', '#', class: 'new-comment-link ml-3 mb-3 mt-3',
-            data: { commentable_type: 'question', commentable_id: question.id }
-    = render 'comments/form', commentable: question
+    - if can? :create, Comment
+      = link_to 'Leave comment', '#', class: 'new-comment-link ml-3 mb-3 mt-3',
+              data: { commentable_type: 'question', commentable_id: question.id }
+      = render 'comments/form', commentable: question

@@ -1,51 +1,53 @@
-= content_tag(:div, id: "answer-#{ answer.id }", class: "answer card mt-3 #{answer.best? ? 'best-answer border-success ' : ''}")
-  div id = "answer-#{ answer.id }-errors"
-    = render 'shared/errors', resource: answer
-  - if answer.best?
-    .card-header = "Answer marked as best"
-  .card-body id = "answer-#{ answer.id }-body"
-    = answer.body
-    footer class = 'blockquote-footer'
-      = "by #{answer.user.email}"
-  .mt-3.ml-3.mb-3 id = "answer-#{ answer.id }-rating"
-    = render 'shared/rating', resource: answer
+- cache answer do
+  = content_tag(:div, id: "answer-#{ answer.id }", class: "answer card mt-3 #{answer.best? ? 'best-answer border-success ' : ''}")
+    div id = "answer-#{ answer.id }-errors"
+      = render 'shared/errors', resource: answer
+    - if answer.best?
+      .card-header = "Answer marked as best"
+    .card-body id = "answer-#{ answer.id }-body"
+      = answer.body
+      footer class = 'blockquote-footer'
+        = "by #{answer.user.email}"
+    .mt-3.ml-3.mb-3 id = "answer-#{ answer.id }-rating"
+      = render 'shared/rating', resource: answer
 
-  div id = "answer-#{ answer.id }-files"
-    ul
-      = render 'shared/files', resource: answer
-  div id = "answer-#{ answer.id }-links"
-    ul
-      = render 'shared/links', resource: answer
+    div id = "answer-#{ answer.id }-files"
+      ul
+        = render 'shared/files', resource: answer
+    div id = "answer-#{ answer.id }-links"
+      ul
+        = render 'shared/links', resource: answer
 
-  -if can? :update, answer
-    = form_with model: answer, class: 'hidden mt-3', html: {id: "edit-answer-#{answer.id}"} do |f|
-      .form-group
-        = f.label :body, 'Answer text'
-        = f.text_area :body, class: 'form-control', rows: 10
-      .form-group
-        = f.label :files, 'Attach files?'
-        = f.file_field :files, class: 'form-control-file', multiple: true, direct_upload: true
-      .form-group
-        = f.fields_for :links do |link|
+    -if can? :update, answer
+      = form_with model: answer, class: 'hidden mt-3', html: {id: "edit-answer-#{answer.id}"} do |f|
+        .form-group
+          = f.label :body, 'Answer text'
+          = f.text_area :body, class: 'form-control', rows: 10
+        .form-group
+          = f.label :files, 'Attach files?'
+          = f.file_field :files, class: 'form-control-file', multiple: true, direct_upload: true
+        .form-group
+          = f.fields_for :links do |link|
 
-          = render 'link_fields', f: link
-        .answer-links
-          = link_to_add_association 'add link', f, :links
+            = render 'link_fields', f: link
+          .answer-links
+            = link_to_add_association 'add link', f, :links
 
-      = f.submit 'Save', class: 'btn btn-primary btn-lg btn-block'
-    .author-links.ml-3.mb-3
-      =link_to 'Delete answer', answer_path(answer), method: :delete, data: {answer_id: answer.id}, remote: true
-      '  |
-      =link_to 'Edit answer', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
-  -if can? :set_best, answer
-    .mark-best-link.ml-3
-      =link_to 'Mark as best', set_best_answer_path(answer), id: "set-best-answer-link-#{ answer.id }", method: :patch, remote: true
+        = f.submit 'Save', class: 'btn btn-primary btn-lg btn-block'
+      .author-links.ml-3.mb-3
+        =link_to 'Delete answer', answer_path(answer), method: :delete, data: {answer_id: answer.id}, remote: true
+        '  |
+        =link_to 'Edit answer', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+
+    -if can? :set_best, answer
+      .mark-best-link.ml-3
+        =link_to 'Mark as best', set_best_answer_path(answer), id: "set-best-answer-link-#{ answer.id }", method: :patch, remote: true
 
 
-  div id = "answer-#{ answer.id }-comments"
-    = render answer.comments
+    div id = "answer-#{ answer.id }-comments"
+      = render answer.comments
 
-  - if can? :create, Comment
-    = link_to 'Leave comment', '#', class: 'new-comment-link ml-3 mb-3 mt-3',
-            data: {commentable_type: 'answer', commentable_id: answer.id}
-    = render 'comments/form', commentable: answer
+    - if can? :create, Comment
+      = link_to 'Leave comment', '#', class: 'new-comment-link ml-3 mb-3 mt-3',
+              data: {commentable_type: 'answer', commentable_id: answer.id}
+      = render 'comments/form', commentable: answer
