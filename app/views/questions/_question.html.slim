@@ -1,4 +1,4 @@
-- cache question do
+- cache [question, current_user]
   = content_tag(:div, id: "question-#{ question.id }", class: 'question card mt-3')
     div id = "question-#{ question.id }-errors"
       = render 'shared/errors', resource: question
