@@ -485,6 +485,7 @@ DEPENDENCIES
   puma (~> 3.11)
   rails (~> 6.0.0)
   rails-controller-testing
+  redis-activesupport
   redis-rack-cache
   redis-rails
   rspec-rails (~> 4.0.0.beta3)
