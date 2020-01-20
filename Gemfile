@@ -45,8 +45,6 @@ gem 'mysql2', '0.4.9'
 gem 'thinking-sphinx'
 gem 'unicorn'
 gem 'redis-rails'
-gem 'redis-rack-cache'
-gem 'redis-activesupport'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

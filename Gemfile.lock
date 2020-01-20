@@ -253,8 +253,6 @@ GEM
     puma (3.12.2)
     puma (3.12.2-java)
     rack (2.1.1)
-    rack-cache (1.11.0)
-      rack (>= 0.4)
     rack-contrib (2.1.0)
       rack (~> 2.0)
     rack-protection (2.0.8.1)
@@ -309,9 +307,6 @@ GEM
     redis-rack (2.1.0)
       rack (>= 2.0.8, < 3)
       redis-store (>= 1.2, < 2)
-    redis-rack-cache (2.2.1)
-      rack-cache (>= 1.10, < 2)
-      redis-store (>= 1.6, < 2)
     redis-rails (5.0.2)
       redis-actionpack (>= 5.0, < 6)
       redis-activesupport (>= 5.0, < 6)
@@ -485,8 +480,6 @@ DEPENDENCIES
   puma (~> 3.11)
   rails (~> 6.0.0)
   rails-controller-testing
-  redis-activesupport
-  redis-rack-cache
   redis-rails
   rspec-rails (~> 4.0.0.beta3)
   sass-rails (~> 5)
