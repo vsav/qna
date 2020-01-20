@@ -1,4 +1,4 @@
-- cache collection_cache_key_for :question do
+- cache [@questions, current_user]
   .questions
     ul.list-group-flush
       - @questions.each do |q|
