@@ -250,8 +250,8 @@ GEM
     pg (1.2.2-x64-mingw32)
     pg (1.2.2-x86-mingw32)
     public_suffix (4.0.3)
-    puma (3.12.2)
-    puma (3.12.2-java)
+    puma (3.12.3)
+    puma (3.12.3-java)
     rack (2.1.1)
     rack-contrib (2.1.0)
       rack (~> 2.0)
@@ -477,7 +477,7 @@ DEPENDENCIES
   omniauth-github
   omniauth-vkontakte
   pg (>= 0.18, < 2.0)
-  puma (~> 3.11)
+  puma (~> 3.12)
   rails (~> 6.0.0)
   rails-controller-testing
   redis-rails
