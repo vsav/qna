@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class NewAnswerMailer < ApplicationMailer
   def notice(user, answer)
     @answer = answer

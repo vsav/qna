@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :reward do
     sequence(:title) { |n| "Reward-#{n}" }

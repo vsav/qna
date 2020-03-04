@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'Authenticated can answer the questions', %q{
+feature 'Authenticated can answer the questions', "
   In order to help someone from a community
   As an authenticated user
   I'd like to be able to answer the questions
-}, js: true do
+", js: true do
   given!(:user) { create(:user) }
   given!(:question) { create(:question, user: user) }
   given!(:answer) { create(:answer, question: question, user: user) }
@@ -16,7 +18,6 @@ feature 'Authenticated can answer the questions', %q{
     end
 
     scenario 'create answer for question' do
-
       fill_in 'Answer text', with: 'Answer text'
       click_on 'Create answer'
 
@@ -120,7 +121,6 @@ feature 'Authenticated can answer the questions', %q{
         click_on 'Create answer'
 
         expect(page).to have_content "Body can't be blank"
-
       end
       using_session('guest') do
         expect(page).to_not have_content '.anwer'

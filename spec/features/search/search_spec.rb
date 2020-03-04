@@ -1,22 +1,22 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'User can search', %q{
+feature 'User can search', "
   In order to search for specified information
   I'd like to be able to get search results
-}, sphinx: true, js: true do
-
+", sphinx: true, js: true do
   given!(:user2) { create(:user) }
   given!(:user) { create(:user, email: 'user-test@test.com') }
   given!(:question) { create(:question, body: 'question-test', user: user2) }
   given!(:answer) { create(:answer, body: 'answer-test', user: user2) }
   given!(:comment) { create(:comment, body: 'comment-test', commentable: question, user: user2) }
   describe 'User can search in specified resource' do
-
     before { visit root_path }
 
     SearchService::RESOURCES.each do |resource|
       scenario "#{resource} search" do
-        other_resources = SearchService::RESOURCES.select{|other| other != resource}
+        other_resources = SearchService::RESOURCES.reject { |other| other == resource }
         ThinkingSphinx::Test.run do
           within '.search-form' do
             fill_in :query, with: 'test'

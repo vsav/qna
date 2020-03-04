@@ -1,10 +1,11 @@
-class AnswersController < ApplicationController
+# frozen_string_literal: true
 
+class AnswersController < ApplicationController
   include Voted
 
   before_action :find_question, only: [:create]
-  before_action :find_answer, only: [:update, :destroy, :set_best]
-  before_action :authenticate_user!, except: [:index, :show]
+  before_action :find_answer, only: %i[update destroy set_best]
+  before_action :authenticate_user!, except: %i[index show]
   after_action :publish_answer, only: :create
 
   authorize_resource
@@ -63,7 +64,7 @@ class AnswersController < ApplicationController
   end
 
   def answer_params
-    params.require(:answer).permit(:body, files: [], links_attributes: [:id, :name, :url, :_destroy])
+    params.require(:answer).permit(:body, files: [], links_attributes: %i[id name url _destroy])
   end
 
   def wardenize
@@ -72,5 +73,4 @@ class AnswersController < ApplicationController
     warden = ::Warden::Proxy.new(renderer_env, ::Warden::Manager.new(Rails.application))
     renderer_env['warden'] = warden
   end
-
 end

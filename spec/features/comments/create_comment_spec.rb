@@ -1,11 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'Authenticated can create comments for the questions and answers', %q{
+feature 'Authenticated can create comments for the questions and answers', "
   In order to help someone from a community
   As an authenticated user
   I'd like to be able to leave comments for the questions and answers
-}, js: true do
-
+", js: true do
   given!(:user) { create(:user) }
   given!(:question) { create(:question, user: user) }
   given!(:answer) { create(:answer, question: question, user: user) }
@@ -47,7 +48,6 @@ feature 'Authenticated can create comments for the questions and answers', %q{
       using_session('guest') do
         expect(page).to have_content 'Answer Comment text'
       end
-
     end
 
     scenario 'if comment have errors it will not appear on page and other browser' do
@@ -89,5 +89,4 @@ feature 'Authenticated can create comments for the questions and answers', %q{
       expect(page).to_not have_link 'Create comment'
     end
   end
-
 end

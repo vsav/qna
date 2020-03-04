@@ -1,5 +1,6 @@
-class OauthCallbacksController < Devise::OmniauthCallbacksController
+# frozen_string_literal: true
 
+class OauthCallbacksController < Devise::OmniauthCallbacksController
   before_action :oauth
 
   def github; end
@@ -13,7 +14,9 @@ class OauthCallbacksController < Devise::OmniauthCallbacksController
     @user = User.find_for_oauth(auth)
     if @user&.confirmed?
       sign_in_and_redirect @user, event: :authentication
-      set_flash_message(:notice, :success, kind: auth.provider.capitalize) if is_navigational_format?
+      if is_navigational_format?
+        set_flash_message(:notice, :success, kind: auth.provider.capitalize)
+      end
     elsif @user
       session[:provider] = auth.provider
       session[:uid] = auth.uid

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Answer, type: :model do
@@ -25,7 +27,6 @@ RSpec.describe Answer, type: :model do
   it_behaves_like Votable
 
   describe 'answer mark_best' do
-
     before do
       answer1.mark_best!
       answer1.reload

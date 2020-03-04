@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe 'Answers API', type: :request do
-  let(:headers) { { "ACCEPT" => "application/json" } }
+  let(:headers) { { 'ACCEPT' => 'application/json' } }
   let!(:user) { create(:user) }
   let(:access_token) { create(:access_token, resource_owner_id: user.id) }
   let!(:question) { create(:question, user: user) }
@@ -9,14 +11,12 @@ describe 'Answers API', type: :request do
   let(:answer) { answers.first }
 
   describe 'GET /api/v1/questions/:id/answers' do
-
     it_behaves_like 'API Authorizable' do
       let(:method) { :get }
       let(:api_path) { "/api/v1/questions/#{question.id}/answers" }
     end
 
     context 'Authorized' do
-
       before { get "/api/v1/questions/#{question.id}/answers", params: { access_token: access_token.token }, headers: headers }
 
       it 'returns status 2xx' do
@@ -37,7 +37,6 @@ describe 'Answers API', type: :request do
   end
 
   describe 'GET /api/v1/answers/:id' do
-
     it_behaves_like 'API Authorizable' do
       let(:method) { :get }
       let(:api_path) { "/api/v1/answers/#{answer.id}" }
@@ -94,8 +93,10 @@ describe 'Answers API', type: :request do
 
     context 'Authorized' do
       context 'Create answer with valid attributes' do
-        let(:do_request) { post "/api/v1/questions/#{question.id}/answers", params: { access_token: access_token.token,
-                                                                answer: attributes_for(:answer) }, headers: headers }
+        let(:do_request) do
+          post "/api/v1/questions/#{question.id}/answers", params: { access_token: access_token.token,
+                                                                     answer: attributes_for(:answer) }, headers: headers
+        end
 
         it 'save new answer to database' do
           expect { do_request }.to change(Answer, :count).by(1)
@@ -108,8 +109,10 @@ describe 'Answers API', type: :request do
       end
 
       context 'Create answer with invalid attributes' do
-        let(:do_request) { post "/api/v1/questions/#{question.id}/answers", params: { access_token: access_token.token,
-                                                                answer: attributes_for(:answer, :invalid) }, headers: headers }
+        let(:do_request) do
+          post "/api/v1/questions/#{question.id}/answers", params: { access_token: access_token.token,
+                                                                     answer: attributes_for(:answer, :invalid) }, headers: headers
+        end
 
         it 'not save new question to database' do
           expect { do_request }.to_not change(Answer, :count)
@@ -131,8 +134,10 @@ describe 'Answers API', type: :request do
 
     context 'Authorized' do
       context 'update answer with valid attributes' do
-        before { patch "/api/v1/answers/#{answer.id}", params: { access_token: access_token.token,
-                 id: answer, answer: { body: 'new body' }, headers: headers } }
+        before do
+          patch "/api/v1/answers/#{answer.id}", params: { access_token: access_token.token,
+                                                          id: answer, answer: { body: 'new body' }, headers: headers }
+        end
 
         it 'assigns new answer to @answer' do
           expect(assigns(:answer)).to eq answer
@@ -148,9 +153,10 @@ describe 'Answers API', type: :request do
       end
 
       context 'update answer with invalid attributes' do
-        before { patch "/api/v1/answers/#{answer.id}", params: { access_token: access_token.token,
-                 id: answer, answer: { body: '' }, headers: headers } }
-
+        before do
+          patch "/api/v1/answers/#{answer.id}", params: { access_token: access_token.token,
+                                                          id: answer, answer: { body: '' }, headers: headers }
+        end
 
         it 'not changes answer attributes' do
           expect(answer.body).to eq 'MyAnswerText'
@@ -175,8 +181,10 @@ describe 'Answers API', type: :request do
 
     context 'Authorized' do
       context 'delete answer' do
-        let(:do_request) { delete "/api/v1/answers/#{answer.id}",
-                           params: { access_token: access_token.token, id: answer.id }, headers: headers }
+        let(:do_request) do
+          delete "/api/v1/answers/#{answer.id}",
+                 params: { access_token: access_token.token, id: answer.id }, headers: headers
+        end
 
         it 'deletes answer' do
           expect { do_request }.to change(Answer, :count).by(-1)

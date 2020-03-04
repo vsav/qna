@@ -1,6 +1,7 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :comment do
-
     sequence :body do |n|
       "Comment #{n} text"
     end

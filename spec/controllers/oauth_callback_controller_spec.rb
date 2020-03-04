@@ -1,10 +1,11 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe OauthCallbacksController, type: :controller do
-
   describe 'Github' do
     before do
-      @request.env["devise.mapping"] = Devise.mappings[:user]
+      @request.env['devise.mapping'] = Devise.mappings[:user]
       @request.env['omniauth.auth'] = mock_auth_hash(:github, email: 'user@test.com')
     end
 
@@ -50,7 +51,7 @@ RSpec.describe OauthCallbacksController, type: :controller do
 
   describe 'Vkontakte' do
     before do
-      @request.env["devise.mapping"] = Devise.mappings[:user]
+      @request.env['devise.mapping'] = Devise.mappings[:user]
       @request.env['omniauth.auth'] = mock_auth_hash(:vkontakte)
     end
 
@@ -78,7 +79,6 @@ RSpec.describe OauthCallbacksController, type: :controller do
       it 'redirects to root path' do
         expect(response).to redirect_to root_path
       end
-
     end
 
     context 'user does not exists' do

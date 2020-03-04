@@ -16,7 +16,6 @@ class Ability
   end
 
   def user_abilities
-
     guest_abilities
 
     can :read, Reward
@@ -27,7 +26,7 @@ class Ability
 
     can :create, [Question, Answer, Comment, Subscription]
 
-    can [:update, :destroy], [Question, Answer], { user_id: user.id}
+    can %i[update destroy], [Question, Answer], { user_id: user.id }
 
     can :destroy, Subscription, user_id: user.id
 
@@ -54,6 +53,5 @@ class Ability
     can :set_best, Answer do |answer|
       user.is_author?(answer.question) && !user.is_author?(answer) && !answer.best?
     end
-
   end
 end

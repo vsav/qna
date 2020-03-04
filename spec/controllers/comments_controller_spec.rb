@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe CommentsController, type: :controller do
@@ -11,10 +13,9 @@ RSpec.describe CommentsController, type: :controller do
     describe '#POST create comment for question' do
       context 'with valid attributes' do
         it 'saves a new comment to the database' do
-
-          expect {
+          expect do
             post :create, params: { comment: attributes_for(:comment), question_id: question.id, user: user }, format: :js
-          }.to change(question.comments, :count).by(1)
+          end.to change(question.comments, :count).by(1)
         end
 
         it 'renders create view' do
@@ -28,18 +29,17 @@ RSpec.describe CommentsController, type: :controller do
         end
 
         it 'starts broadcast to CommentsChannel' do
-
-          expect {
+          expect do
             post :create, params: { comment: attributes_for(:comment), question_id: question.id, user: user }, format: :js
-          }.to have_broadcasted_to("questions/#{question.id}/comments")
+          end.to have_broadcasted_to("questions/#{question.id}/comments")
         end
       end
 
       context 'with invalid attributes' do
         it 'do not saves a new comment to the database' do
-          expect {
+          expect do
             post :create, params: { comment: attributes_for(:comment, :invalid), question_id: question.id, user: user }, format: :js
-          }.to_not change(question.comments, :count)
+          end.to_not change(question.comments, :count)
         end
 
         it 'renders create' do
@@ -49,22 +49,19 @@ RSpec.describe CommentsController, type: :controller do
         end
 
         it 'do not starts broadcast to CommentsChannel' do
-
-          expect {
+          expect do
             post :create, params: { comment: attributes_for(:comment, :invalid), question_id: question.id, user: user }, format: :js
-          }.to_not have_broadcasted_to("questions/#{question.id}/comments")
+          end.to_not have_broadcasted_to("questions/#{question.id}/comments")
         end
-
       end
     end
 
     describe '#POST create comment for answer' do
       context 'with valid attributes' do
         it 'saves a new comment to the database' do
-
-          expect {
+          expect do
             post :create, params: { comment: attributes_for(:comment), question: question, answer_id: answer.id, user: user }, format: :js
-          }.to change(answer.comments, :count).by(1)
+          end.to change(answer.comments, :count).by(1)
         end
 
         it 'renders create view' do
@@ -80,18 +77,17 @@ RSpec.describe CommentsController, type: :controller do
         end
 
         it 'starts broadcast to CommentsChannel' do
-
-          expect {
+          expect do
             post :create, params: { comment: attributes_for(:comment), question: question, answer_id: answer.id, user: user }, format: :js
-          }.to have_broadcasted_to("questions/#{answer.question_id}/comments")
+          end.to have_broadcasted_to("questions/#{answer.question_id}/comments")
         end
       end
 
       context 'with invalid attributes' do
         it 'do not saves a new comment to the database' do
-          expect {
+          expect do
             post :create, params: { comment: attributes_for(:comment, :invalid), question: question, answer_id: answer.id, user: user }, format: :js
-          }.to_not change(answer.comments, :count)
+          end.to_not change(answer.comments, :count)
         end
 
         it 'renders create' do
@@ -100,9 +96,9 @@ RSpec.describe CommentsController, type: :controller do
           expect(response).to render_template :create
         end
         it 'do not starts broadcast to CommentsChannel' do
-          expect {
+          expect do
             post :create, params: { comment: attributes_for(:comment, :invalid), question: question, answer_id: answer.id, user: user }, format: :js
-          }.to_not have_broadcasted_to("questions/#{question.id}/comments")
+          end.to_not have_broadcasted_to("questions/#{question.id}/comments")
         end
       end
     end
@@ -111,31 +107,30 @@ RSpec.describe CommentsController, type: :controller do
   describe 'Unauthenticated user' do
     context 'tries to create comment for question' do
       it 'do not saves a new comment to the database' do
-        expect {
+        expect do
           post :create, params: { comment: attributes_for(:comment), question_id: question.id }, format: :js
-        }.to_not change(question.comments, :count)
+        end.to_not change(question.comments, :count)
       end
 
       it 'do not starts broadcast to CommentsChannel' do
-        expect {
+        expect do
           post :create, params: { comment: attributes_for(:comment), question_id: question.id }, format: :js
-        }.to_not have_broadcasted_to("questions/#{question.id}/comments")
+        end.to_not have_broadcasted_to("questions/#{question.id}/comments")
       end
     end
 
     context 'tries to create comment for answer' do
       it 'do not saves a new comment to the database' do
-        expect {
+        expect do
           post :create, params: { comment: attributes_for(:comment), question: question, answer_id: answer.id }, format: :js
-        }.to_not change(answer.comments, :count)
+        end.to_not change(answer.comments, :count)
       end
 
       it 'do not starts broadcast to CommentsChannel' do
-        expect {
+        expect do
           post :create, params: { comment: attributes_for(:comment), question: question, answer_id: answer.id }, format: :js
-        }.to_not have_broadcasted_to("questions/#{answer.question_id}/comments")
+        end.to_not have_broadcasted_to("questions/#{answer.question_id}/comments")
       end
-
     end
   end
 end

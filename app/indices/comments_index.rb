@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 ThinkingSphinx::Index.define :comment, with: :active_record do
-  #fields
+  # fields
   indexes body
   indexes user.email, as: :user, sortable: true
 
-  #attributes
+  # attributes
   has commentable_type, commentable_id, user_id, created_at, updated_at
 end

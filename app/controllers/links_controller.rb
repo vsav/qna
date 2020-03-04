@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class LinksController < ApplicationController
   before_action :authenticate_user!
 
@@ -6,5 +8,4 @@ class LinksController < ApplicationController
     authorize! :destroy, @link
     @link.destroy
   end
-
 end

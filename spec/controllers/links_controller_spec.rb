@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe LinksController, type: :controller do
@@ -7,9 +9,7 @@ RSpec.describe LinksController, type: :controller do
   let!(:link1) { create(:link, :valid_url, linkable: question) }
 
   describe 'DELETE #destroy' do
-
     context 'As author' do
-
       before { sign_in(user) }
 
       it 'deletes link' do
@@ -20,11 +20,9 @@ RSpec.describe LinksController, type: :controller do
         delete :destroy, params: { id: question.links.first }, format: :js
         expect(response).to render_template :destroy
       end
-
     end
 
     context 'As not author' do
-
       before { sign_in(user2) }
 
       it 'do not deletes link' do
@@ -38,7 +36,6 @@ RSpec.describe LinksController, type: :controller do
     end
 
     context 'As guest' do
-
       it 'do not deletes link' do
         expect { delete :destroy, params: { id: question.links.first }, format: :js }.to_not change(question.links, :count)
       end

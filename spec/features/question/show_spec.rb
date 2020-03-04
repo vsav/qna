@@ -1,13 +1,15 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'User can see questions and answers for them', %q{
+feature 'User can see questions and answers for them', "
   In order to get answer from a community
   As an authenticated or unauthenticated user
   I'd like to be able to see the answers for questions
-} do
-    given(:user) { create(:user) }
-    given(:question) { create(:question, user: user) }
-    given(:answers) { create_list(:answer, 3, question) }
+" do
+  given(:user) { create(:user) }
+  given(:question) { create(:question, user: user) }
+  given(:answers) { create_list(:answer, 3, question) }
 
   describe 'Authenticated user' do
     before do

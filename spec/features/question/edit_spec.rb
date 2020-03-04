@@ -1,17 +1,17 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'User can edit own question', %q{
+feature 'User can edit own question', "
   In order to edit my question for some reason
   As a question's author
   I'd like to be able to edit my question
-}, js: true do
-
+", js: true do
   given(:user) { create(:user) }
   given(:user2) { create(:user) }
   given(:question) { create(:question, user: user) }
 
   describe 'Authenticated user' do
-
     scenario 'author trying to edit own question' do
       sign_in(user)
       visit question_path(question)
@@ -25,7 +25,6 @@ feature 'User can edit own question', %q{
       end
       expect(page).to have_content 'Another title'
       expect(page).to have_content 'New body'
-
     end
 
     scenario 'author trying to edit own question with invalid params' do

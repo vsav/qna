@@ -1,10 +1,11 @@
-class QuestionsController < ApplicationController
+# frozen_string_literal: true
 
+class QuestionsController < ApplicationController
   include Voted
 
-  before_action :authenticate_user!, except: [:index, :show]
-  before_action :find_question, only: [:show, :edit, :update, :destroy]
-  before_action :find_subscription, only: [:show, :edit, :update]
+  before_action :authenticate_user!, except: %i[index show]
+  before_action :find_question, only: %i[show edit update destroy]
+  before_action :find_subscription, only: %i[show edit update]
   after_action :publish_question, only: :create
 
   authorize_resource
@@ -51,16 +52,16 @@ class QuestionsController < ApplicationController
     return if @question.errors.any?
 
     ActionCable.server.broadcast(
-        'questions',
-        html: html(@question),
-        question: @question
+      'questions',
+      html: html(@question),
+      question: @question
     )
   end
 
   def html(question)
     ApplicationController.render(
-        partial: 'questions/question_header',
-        locals: { question: question }
+      partial: 'questions/question_header',
+      locals: { question: question }
     )
   end
 
@@ -71,8 +72,11 @@ class QuestionsController < ApplicationController
   end
 
   def question_params
-    params.require(:question).permit(:title, :body, files: [], links_attributes: [:id, :name, :url, :_destroy],
-                                     reward_attributes: [:title, :image])
+    params.require(:question).permit(:title,
+                                     :body,
+                                     files: [],
+                                     links_attributes: %i[id name url _destroy],
+                                     reward_attributes: %i[title image])
   end
 
   def find_subscription

@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
-feature 'Edit answer', %q{
+feature 'Edit answer', "
   In order to edit my answer
   As an answer author
   I'd like to be able to edit answer
-}, js: true do
-  given(:user) {create(:user) }
-  given(:user2) {create(:user) }
+", js: true do
+  given(:user) { create(:user) }
+  given(:user2) { create(:user) }
   given(:question) { create(:question, user: user) }
   given!(:answer) { create(:answer, question: question, user: user) }
 

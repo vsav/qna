@@ -1,11 +1,12 @@
+# frozen_string_literal: true
+
 # server-based syntax
 # ======================
 # Defines a single server with a list of roles and multiple properties.
 # You can define all roles on a single server, or split them:
 
-server "163.172.164.93", user: "deploy", roles: %w{app db web}, primaty: true
+server '163.172.164.93', user: 'deploy', roles: %w[app db web], primaty: true
 set :rails_env, :production
-
 
 # Custom SSH Options
 # ==================
@@ -16,9 +17,9 @@ set :rails_env, :production
 # Global options
 # --------------
 set :ssh_options, {
-  keys: %w(/Users/VS/.ssh/id_rsa),
+  keys: %w[/Users/VS/.ssh/id_rsa],
   forward_agent: true,
-  auth_methods: %w(publickey password),
+  auth_methods: %w[publickey password],
   port: 2222
 }
 #
@@ -34,4 +35,3 @@ set :ssh_options, {
 #     auth_methods: %w(publickey password)
 #     # password: "please use keys"
 #   }
-

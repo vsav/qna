@@ -1,11 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'User can create question', %q{
+feature 'User can create question', "
   In order to get answer from a community
   As an authenticated user
   I'd like to be able to ask the question
-} do
-
+" do
   given(:user) { create(:user) }
 
   describe 'Authenticated user' do
@@ -25,7 +26,6 @@ feature 'User can create question', %q{
     end
 
     scenario 'asks a question with errors' do
-
       fill_in 'Question title', with: ''
       fill_in 'Question text', with: 'text text text'
       click_on 'Ask question'
@@ -117,7 +117,6 @@ feature 'User can create question', %q{
 
         expect(page).to have_content 'ActionCable Question'
         expect(page).to have_content 'text text text'
-
       end
       using_session('guest') do
         expect(page).to have_content 'ActionCable Question'
@@ -141,7 +140,6 @@ feature 'User can create question', %q{
 
         expect(page).to have_content "Title can't be blank"
         expect(page).to have_content "Body can't be blank"
-
       end
       using_session('guest') do
         expect(page).to_not have_content '.question-header'

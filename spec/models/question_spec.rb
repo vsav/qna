@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Question, type: :model do
@@ -18,5 +20,4 @@ RSpec.describe Question, type: :model do
   end
 
   it_behaves_like Votable
-
 end

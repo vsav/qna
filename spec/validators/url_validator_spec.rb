@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require "#{Rails.root}/app/validators/url_validator"
 
@@ -53,8 +55,4 @@ describe UrlValidator, type: :model do
       expect(subject.errors[:url]).to match_array('must be a valid URL format')
     end
   end
-
 end
-
-
-

@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.shared_examples_for Voted do
-
   let(:user1) { create(:user) }
   let(:user2) { create(:user) }
   let(:model) { described_class.controller_name.classify.constantize }
@@ -14,10 +15,8 @@ RSpec.shared_examples_for Voted do
     end
   end
 
-
   describe 'POST #like' do
     context 'Authenticated user' do
-
       before do
         sign_in(user1)
       end
@@ -59,7 +58,6 @@ RSpec.shared_examples_for Voted do
 
   describe 'POST #dislike' do
     context 'Authenticated user' do
-
       before { sign_in(user) }
 
       it 'tries to dislike other user question' do
@@ -69,9 +67,9 @@ RSpec.shared_examples_for Voted do
       it 'renders valid json on dislike' do
         post :dislike, params: { id: votable }, format: :json
         rendered_json = {
-            total_rating: votable.total_rating,
-            klass: votable.class.to_s.downcase,
-            votable_id: votable.id
+          total_rating: votable.total_rating,
+          klass: votable.class.to_s.downcase,
+          votable_id: votable.id
         }.to_json
 
         expect(response.body).to eq(rendered_json)
@@ -99,7 +97,6 @@ RSpec.shared_examples_for Voted do
 
   describe 'DELETE #unvote' do
     context 'Authenticated user' do
-
       before { sign_in(user1) }
 
       it 'tries to recall his vote (unvote)' do
@@ -111,9 +108,9 @@ RSpec.shared_examples_for Voted do
         post :dislike, params: { id: votable }, format: :json
         delete :unvote, params: { id: votable }, format: :json
         rendered_json = {
-            total_rating: votable.total_rating,
-            klass: votable.class.to_s.downcase,
-            votable_id: votable.id
+          total_rating: votable.total_rating,
+          klass: votable.class.to_s.downcase,
+          votable_id: votable.id
         }.to_json
 
         expect(response.body).to eq(rendered_json)

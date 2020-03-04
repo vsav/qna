@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe SearchController, type: :controller do
-
   describe 'GET #results' do
     SearchService::RESOURCES.each do |resource|
       it "search in #{resource}" do
@@ -14,7 +15,6 @@ RSpec.describe SearchController, type: :controller do
         get :results, params: { query: 'test', resource: resource }
         expect(response).to render_template :results
       end
-
     end
 
     it 'search entire site if resource nil' do

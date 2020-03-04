@@ -1,10 +1,12 @@
-require "rails_helper"
+# frozen_string_literal: true
+
+require 'rails_helper'
 
 RSpec.describe DailyDigestMailer, type: :mailer do
   describe 'digest' do
     let(:user) { create :user }
     let(:mail) { DailyDigestMailer.digest(user) }
-    let!(:yesterday_questions) { create_list :question, 2, title: 'Yesterday question',  created_at: Date.yesterday }
+    let!(:yesterday_questions) { create_list :question, 2, title: 'Yesterday question', created_at: Date.yesterday }
     let!(:today_questions) { create_list :question, 2, title: 'Today question', created_at: Date.today }
 
     it 'prepares emails' do

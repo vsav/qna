@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateOauthProviders < ActiveRecord::Migration[6.0]
   def change
     create_table :oauth_providers do |t|
@@ -7,6 +9,6 @@ class CreateOauthProviders < ActiveRecord::Migration[6.0]
 
       t.timestamps
     end
-    add_index :oauth_providers, [:provider, :uid], unique: true
+    add_index :oauth_providers, %i[provider uid], unique: true
   end
 end

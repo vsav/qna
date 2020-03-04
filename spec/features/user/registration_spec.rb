@@ -1,11 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'Guest can register', %q{
+feature 'Guest can register', "
   In order to sign in
   As a guest
   I'd like to be able to register
-} do
-
+" do
   let(:user) { create(:user) }
 
   before { visit new_user_registration_path }

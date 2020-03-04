@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :answer do
     question
-    body { "MyAnswerText" }
+    body { 'MyAnswerText' }
     user
     best { false }
     trait :invalid do

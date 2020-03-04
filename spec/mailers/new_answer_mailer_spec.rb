@@ -1,4 +1,6 @@
-require "rails_helper"
+# frozen_string_literal: true
+
+require 'rails_helper'
 
 RSpec.describe NewAnswerMailer, type: :mailer do
   describe 'New answer notice' do
@@ -8,7 +10,7 @@ RSpec.describe NewAnswerMailer, type: :mailer do
     let(:mail) { NewAnswerMailer.notice(user, answer) }
 
     it 'prepares emails' do
-      expect(mail.subject).to eq("User #{ answer.user.email } just answered your question: #{question.title}")
+      expect(mail.subject).to eq("User #{answer.user.email} just answered your question: #{question.title}")
       expect(mail.to).to eq([user.email])
     end
 
@@ -16,5 +18,4 @@ RSpec.describe NewAnswerMailer, type: :mailer do
       expect(mail.body.encoded).to match(answer.body)
     end
   end
-
 end

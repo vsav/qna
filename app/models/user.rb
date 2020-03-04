@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :confirmable,
-         :omniauthable, omniauth_providers: [:github, :vkontakte]
+         :omniauthable, omniauth_providers: %i[github vkontakte]
 
   has_many :questions, dependent: :destroy
   has_many :answers, dependent: :destroy
@@ -16,7 +18,7 @@ class User < ApplicationRecord
   validates :email, email: true
 
   def is_author?(resource)
-    resource.user_id == self.id
+    resource.user_id == id
   end
 
   def liked?(resource)

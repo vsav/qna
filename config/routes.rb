@@ -1,14 +1,15 @@
+# frozen_string_literal: true
+
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
-
-  authenticate :user, lambda {|u| u.admin?} do
+  authenticate :user, ->(u) { u.admin? } do
     mount Sidekiq::Web => '/sidekiq'
   end
 
   use_doorkeeper
   devise_for :users, controllers: { omniauth_callbacks: 'oauth_callbacks',
-                                             confirmations: 'oauth_confirmations'}
+                                    confirmations: 'oauth_confirmations' }
 
   concern :votable do
     member do
@@ -21,8 +22,11 @@ Rails.application.routes.draw do
     resources :comments, only: :create, shallow: true
   end
 
-  resources :questions, concerns: [:votable, :commentable] do
-    resources :answers, concerns: [:votable, :commentable], shallow: true, only: [:create, :update, :destroy] do
+  resources :questions, concerns: %i[votable commentable] do
+    resources :answers,
+              concerns: %i[votable commentable],
+              shallow: true,
+              only: %i[create update destroy] do
       patch :set_best, on: :member
     end
     resources :subscriptions, only: %i[create destroy], shallow: true
@@ -41,17 +45,15 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-
       resources :profiles, only: :index do
         get :me, on: :collection
       end
 
-      resources :questions, except: [:new, :edit], shallow: true do
-        resources :answers, except: [:new, :edit]
+      resources :questions, except: %i[new edit], shallow: true do
+        resources :answers, except: %i[new edit]
       end
     end
   end
 
   get :search, to: 'search#results'
-
 end

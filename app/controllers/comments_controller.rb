@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CommentsController < ApplicationController
   before_action :authenticate_user!
   before_action :find_commentable, only: :create
@@ -31,7 +33,7 @@ class CommentsController < ApplicationController
   private
 
   def find_commentable
-    klass = [Answer, Question].find { |klass| params["#{klass.name.underscore}_id"] }
+    klass = [Answer, Question].find { |k| params["#{k.name.underscore}_id"] }
     @commentable = klass.find(params["#{klass.name.underscore}_id"])
   end
 
@@ -46,5 +48,4 @@ class CommentsController < ApplicationController
   def comment_params
     params.require(:comment).permit(:body)
   end
-
 end

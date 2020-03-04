@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Use this file to easily define all of your cron jobs.
 #
 # It's helpful, but not entirely necessary to understand cron before proceeding.
@@ -18,7 +20,7 @@ every 1.days do
 end
 
 every 30.minutes do
-  rake "ts:index"
+  rake 'ts:index'
 end
 
 # Learn more: http://github.com/javan/whenever

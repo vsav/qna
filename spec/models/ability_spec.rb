@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Ability do
@@ -90,6 +92,5 @@ RSpec.describe Ability do
     describe '/api/v1/profiles/me' do
       it { should be_able_to :me, user }
     end
-
   end
 end

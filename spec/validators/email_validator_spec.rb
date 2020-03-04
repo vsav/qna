@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require "#{Rails.root}/app/validators/email_validator"
 
@@ -53,5 +55,4 @@ describe EmailValidator, type: :model do
       expect(subject.errors[:email]).to include('must be a valid email format')
     end
   end
-
 end

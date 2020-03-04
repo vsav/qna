@@ -1,5 +1,6 @@
-class Answer < ApplicationRecord
+# frozen_string_literal: true
 
+class Answer < ApplicationRecord
   include WithLinks
   include Votable
   include Commentable

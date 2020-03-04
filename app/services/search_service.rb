@@ -1,6 +1,7 @@
-class SearchService
+# frozen_string_literal: true
 
-  RESOURCES = %w[Question Answer Comment User]
+class SearchService
+  RESOURCES = %w[Question Answer Comment User].freeze
 
   def self.call(query:, resource: nil)
     klass = RESOURCES.include?(resource) ? resource.constantize : ThinkingSphinx

@@ -1,10 +1,13 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe 'Profiles API', type: :request do
-  let(:headers) { { "CONTENT_TYPE" => "application/json",
-                    "ACCEPT" => "application/json" } }
+  let(:headers) do
+    { 'CONTENT_TYPE' => 'application/json',
+      'ACCEPT' => 'application/json' }
+  end
   describe 'GET /api/v1/profiles/me' do
-
     it_behaves_like 'API Authorizable' do
       let(:method) { :get }
       let(:api_path) { '/api/v1/profiles/me' }
@@ -27,7 +30,7 @@ describe 'Profiles API', type: :request do
       end
 
       it 'does not return private fields' do
-        %w[password, encrypted_password].each do |attr|
+        %w[password encrypted_password].each do |attr|
           expect(json['user']).to_not have_key(attr)
         end
       end
@@ -35,7 +38,6 @@ describe 'Profiles API', type: :request do
   end
 
   describe 'GET /api/v1/profiles' do
-
     it_behaves_like 'API Authorizable' do
       let(:method) { :get }
       let(:api_path) { '/api/v1/profiles' }
@@ -65,11 +67,10 @@ describe 'Profiles API', type: :request do
       end
 
       it 'does not return private fields' do
-        %w[password, encrypted_password].each do |attr|
+        %w[password encrypted_password].each do |attr|
           expect(json['users'].last).to_not have_key(attr)
         end
       end
-
     end
   end
 end

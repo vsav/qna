@@ -1,11 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'User can sign out', %q{
+feature 'User can sign out', "
   In order to end session
   As an authenticated user
   I'd like to be able to sign out
-} do
-
+" do
   given(:user) { create(:user) }
 
   background { sign_in(user) }

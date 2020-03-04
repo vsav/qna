@@ -1,18 +1,18 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'User can remove own questions/answers attachments', %q{
+feature 'User can remove own questions/answers attachments', "
   In order to correct my question or answer
   As an author
   I'd like to remove my question or answer attachments
-} do
-
-  given(:user) {create(:user)}
-  given(:user2) {create(:user)}
-  given(:question) {create(:question, user: user)}
-  given(:answer) {create(:answer, question: question, user: user)}
+" do
+  given(:user) { create(:user) }
+  given(:user2) { create(:user) }
+  given(:question) { create(:question, user: user) }
+  given(:answer) { create(:answer, question: question, user: user) }
 
   describe 'Delete question attachment', js: true do
-
     background { question.files.attach(create_file_blob) }
 
     scenario 'author trying to remove attachment' do
@@ -42,7 +42,6 @@ feature 'User can remove own questions/answers attachments', %q{
   end
 
   describe 'Delete answer attachment', js: true do
-
     background { answer.files.attach(create_file_blob) }
 
     scenario 'author trying to remove attachment' do

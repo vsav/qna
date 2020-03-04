@@ -1,11 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'User can subscribe to question', %q{
+feature 'User can subscribe to question', "
   In order to be notified of new answers for my question
   As an authenticated user
   I'd like to be able to get email notification of new answers for my question
-} do
-
+" do
   given(:user) { create :user }
   given(:user2) { create :user }
   given(:question) { create :question, user: user }
@@ -47,7 +48,6 @@ feature 'User can subscribe to question', %q{
       expect(page).to_not have_content 'Unsubscribe'
     end
   end
-
 
   scenario 'Unauthenticated user', js: true do
     visit question_path(question)

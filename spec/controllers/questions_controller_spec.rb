@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
-
   it_behaves_like Voted
 
   let(:user) { create(:user) }
@@ -23,7 +24,6 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'GET #show' do
-
     before { get :show, params: { id: question } }
 
     it 'assigns the requested question to @question' do
@@ -44,7 +44,6 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'GET #new' do
-
     before { login(user) }
     before { get :new }
 
@@ -62,9 +61,7 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'POST #create' do
-
     context 'with valid attributes' do
-
       before { login(user) }
       let!(:question) { create(:question, user: user) }
       it 'saves a new question to database' do
@@ -72,8 +69,10 @@ RSpec.describe QuestionsController, type: :controller do
       end
 
       it 'saves a new question with links to database' do
-        expect { post :create, params: { question: attributes_for(:question), link: create(:link, :valid_url, linkable: question) },
-                      format: :js }.to change(Question, :count).by(1)
+        expect do
+          post :create, params: { question: attributes_for(:question), link: create(:link, :valid_url, linkable: question) },
+                        format: :js
+        end .to change(Question, :count).by(1)
       end
 
       it 'redirects to show view' do
@@ -90,12 +89,11 @@ RSpec.describe QuestionsController, type: :controller do
       it 'broadcast to channel' do
         expect do
           post :create, params: { question: attributes_for(:question), format: :js }
-        end.to have_broadcasted_to("questions")
+        end.to have_broadcasted_to('questions')
       end
     end
 
     context 'with invalid attributes' do
-
       before { login(user) }
 
       it 'does not save the question to database' do
@@ -110,12 +108,11 @@ RSpec.describe QuestionsController, type: :controller do
       it 'not broadcast to channel' do
         expect do
           post :create, params: { question: attributes_for(:question, :invalid), format: :js }
-        end.to_not have_broadcasted_to("questions")
+        end.to_not have_broadcasted_to('questions')
       end
     end
 
     context 'as guest' do
-
       it 'redirects to sign_in page' do
         post :create, params: { question: attributes_for(:question) }
         expect(response).to redirect_to new_user_session_path
@@ -127,9 +124,7 @@ RSpec.describe QuestionsController, type: :controller do
     end
   end
 
-
   describe 'PATCH #update' do
-
     context 'as author with valid attributes' do
       before { login(user) }
 
@@ -147,7 +142,7 @@ RSpec.describe QuestionsController, type: :controller do
 
       it 'adds links to question' do
         patch :update, params: { id: question, question: attributes_for(:question),
-                                 link: create(:link, :valid_url, linkable: question)  }, format: :js
+                                 link: create(:link, :valid_url, linkable: question) }, format: :js
         question.reload
         expect(question.links.first.name).to eq 'MyString'
         expect(question.links.first.url).to eq 'http://example.com'
@@ -177,7 +172,6 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'as not author with valid attributes' do
-
       before do
         login(user2)
         patch :update, params: { id: question, question: { title: 'new title', body: 'new body' }, format: :js }
@@ -195,7 +189,6 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'as guest' do
-
       before { patch :update, params: { id: question, question: { title: 'new title', body: 'new body' }, format: :js } }
 
       it 'redirects to sign_in page' do
@@ -237,7 +230,6 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'as guest' do
-
       it 'redirects to sign_in page' do
         delete :destroy, params: { id: question }
         expect(response).to redirect_to new_user_session_path

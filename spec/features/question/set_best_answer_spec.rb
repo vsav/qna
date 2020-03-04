@@ -1,11 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'User can mark answer for own question as best', %q{
+feature 'User can mark answer for own question as best', "
   In order to choose the best answer for my question
   As a question's author
   I'd like to be able to mark answer as best
-}, js: true do
-
+", js: true do
   given!(:user) { create(:user) }
   given!(:user2) { create(:user) }
   given!(:reward) { create(:reward, question: question) }
@@ -15,7 +16,6 @@ feature 'User can mark answer for own question as best', %q{
   given!(:answer3) { create(:answer, question: question, user: user2) }
 
   describe 'Authenticated user' do
-
     scenario 'answers have link to mark them best and best answer have not' do
       sign_in(user)
       visit question_path(question)
@@ -82,6 +82,5 @@ feature 'User can mark answer for own question as best', %q{
       visit question_path(question)
       expect(page).to_not have_link(href: /"\bMark as best"/)
     end
-
   end
 end

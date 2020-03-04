@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe RewardsController, type: :controller do
@@ -11,7 +13,6 @@ RSpec.describe RewardsController, type: :controller do
         login(user)
         get :index, params: { user_id: user.id }
       end
-
 
       it 'populates an array with user rewards' do
         expect(assigns(:rewards)).to match_array(rewards)
@@ -32,7 +33,6 @@ RSpec.describe RewardsController, type: :controller do
       it 'redirects to login page' do
         expect(response).to redirect_to(new_user_session_path)
       end
-
     end
   end
 end

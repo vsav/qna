@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
-
   it_behaves_like Voted
 
   let(:question) { create(:question, user: user) }
@@ -10,7 +11,6 @@ RSpec.describe AnswersController, type: :controller do
   let(:answer) { create(:answer, question: question, user: user) }
 
   describe 'POST #create' do
-
     context 'with valid attributes' do
       before { sign_in(user) }
       let!(:answer) { create(:answer, question: question, user: user) }
@@ -23,14 +23,18 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'saves a new answer to database' do
-        expect { post :create, params: { question_id: question, answer: attributes_for(:answer) },
-                      format: :js }.to change(Answer, :count).by(1)
+        expect do
+          post :create, params: { question_id: question, answer: attributes_for(:answer) },
+                        format: :js
+        end .to change(Answer, :count).by(1)
       end
 
       it 'saves a new answer with links to database' do
-        expect { post :create, params: { question_id: question, answer: attributes_for(:answer),
-                                         link: create(:link, :valid_url, linkable: answer) },
-                                         format: :js }.to change(Answer, :count).by(1)
+        expect do
+          post :create, params: { question_id: question, answer: attributes_for(:answer),
+                                  link: create(:link, :valid_url, linkable: answer) },
+                        format: :js
+        end .to change(Answer, :count).by(1)
       end
 
       it 'renders create template' do
@@ -43,14 +47,15 @@ RSpec.describe AnswersController, type: :controller do
           post :create, params: { question_id: question, answer: attributes_for(:answer), format: :js }
         end.to have_broadcasted_to("questions/#{question.id}/answers")
       end
-
     end
 
     context 'with invalid attributes' do
       before { sign_in(user) }
       it 'does not save the answer to database' do
-        expect { post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) },
-                      format: :js }.to_not change(Answer, :count)
+        expect do
+          post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) },
+                        format: :js
+        end .to_not change(Answer, :count)
       end
 
       it 'renders create template' do
@@ -66,7 +71,6 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'POST #create as guest' do
-
       it 'redirects to sign_in page' do
         post :create, params: { question_id: question, answer: attributes_for(:answer) }
         expect(response).to redirect_to new_user_session_path
@@ -79,7 +83,6 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'PATCH #update' do
-
     context 'as author with valid attributes' do
       before { sign_in(user) }
 
@@ -96,7 +99,7 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'adds links to answer' do
         patch :update, params: { question_id: question, id: answer, answer: attributes_for(:answer),
-                               link: create(:link, :valid_url, linkable: answer)  }, format: :js
+                                 link: create(:link, :valid_url, linkable: answer) }, format: :js
         answer.reload
         expect(answer.links.first.name).to eq 'MyString'
         expect(answer.links.first.url).to eq 'http://example.com'
@@ -106,12 +109,9 @@ RSpec.describe AnswersController, type: :controller do
         patch :update, params: { question_id: question, id: answer, answer: { body: 'new body' }, format: :js }
         expect(response).to render_template :update
       end
-
-
     end
 
     context 'as author with invalid attributes' do
-
       before do
         sign_in(user)
         patch :update, params: { question_id: question, id: answer, answer: attributes_for(:answer, :invalid), format: :js }
@@ -128,7 +128,6 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'as not author with valid attributes' do
-
       before do
         sign_in(user2)
         patch :update, params: { question_id: question, id: answer, answer: { body: 'new body' }, format: :js }
@@ -145,7 +144,6 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'as guest' do
-
       before { patch :update, params: { question_id: question, id: answer, answer: { body: 'new body' } }, format: :js }
 
       it 'returns status 401: unauthorized' do
@@ -188,7 +186,6 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'as guest' do
-
       it 'returns status 401: unauthorized' do
         delete :destroy, params: { question_id: question, id: answer }, format: :js
         expect(response).to have_http_status(401)
@@ -222,7 +219,6 @@ RSpec.describe AnswersController, type: :controller do
       it 'renders set_best' do
         expect(response).to render_template :set_best
       end
-
     end
 
     context 'as not author' do
@@ -247,7 +243,6 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'as guest' do
-
       it 'returns status 401: unauthorized' do
         patch :set_best, params: { id: answer2, format: :js }
         expect(response).to have_http_status(401)
@@ -262,8 +257,6 @@ RSpec.describe AnswersController, type: :controller do
         answer1.reload
         expect(answer1).to be_best
       end
-
     end
   end
 end
-

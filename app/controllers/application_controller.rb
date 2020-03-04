@@ -1,5 +1,6 @@
-class ApplicationController < ActionController::Base
+# frozen_string_literal: true
 
+class ApplicationController < ActionController::Base
   before_action :set_gon_user, unless: :devise_controller?
 
   check_authorization unless: :devise_controller?

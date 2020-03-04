@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'User can delete own question', %q{
+feature 'User can delete own question', "
   In order to delete my question for some reason
   As a question's author
   I'd like to be able to delete my question
-} do
+" do
   describe 'Authenticated user' do
     given(:user) { create(:user) }
     given(:user2) { create(:user) }

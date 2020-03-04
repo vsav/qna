@@ -1,0 +1,61 @@
+AllCops:
+  TargetRubyVersion: 2.6.4
+  Exclude:
+    - bin/**/*
+    - db/schema.rb
+    - db/seeds.rb
+    - node_modules/**/*
+    - vendor/**/*
+    - public/**/*
+    - tmp/**/*
+    - config/unicorn/*
+
+Style/ClassAndModuleChildren:
+  EnforcedStyle: compact
+  Exclude:
+    - config/application.rb
+    - app/channels/**/*
+
+Style/Documentation:
+  Exclude:
+    - app/**/*
+    - spec/**/*
+    - config/initializers/*
+    - config/application.rb
+    - db/migrate/*
+
+Metrics/AbcSize:
+  Max: 100
+  Exclude:
+    - db/migrate/*
+
+Metrics/LineLength:
+  Max: 100
+  IgnoredPatterns: ['\A#', '# rubocop:disable', ' < ', '\A\s*#']
+  Exclude:
+    - db/migrate/*
+    - spec/**/*
+    - app/validators/**/*
+
+Metrics/BlockLength:
+  Exclude:
+    - config/environments/*.rb
+    - config/routes.rb
+    - spec/**/*
+
+Metrics/ClassLength:
+  Exclude:
+    - spec/**/*
+
+Metrics/MethodLength:
+  Max: 30
+  Exclude:
+    - spec/**/*
+    - db/migrate/*
+    
+Naming/MemoizedInstanceVariableName:
+  Enabled: false
+
+Naming/PredicateName:
+  Enabled: false
+

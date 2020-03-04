@@ -1,15 +1,15 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
-feature 'Delete answer', %q{
+feature 'Delete answer', "
   In order to remove my answer
   As an authenticated user
   I'd like to be able to delete answer
-}, js: true do
-
+", js: true do
   given(:user) { create(:user) }
   given(:question) { create(:question, user: user) }
   given!(:answer) { create(:answer, question: question, user: user) }
   describe 'Authenticated user' do
-
     scenario 'delete own answer' do
       sign_in(user)
       visit question_path(question)

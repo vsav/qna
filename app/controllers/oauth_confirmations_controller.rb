@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OauthConfirmationsController < Devise::ConfirmationsController
   def new; end
 
@@ -16,7 +18,7 @@ class OauthConfirmationsController < Devise::ConfirmationsController
 
   private
 
-  def after_confirmation_path_for(resource_name, user)
+  def after_confirmation_path_for(_resource_name, user)
     session_data = { provider: session[:provider], uid: session[:uid] }
     user.oauth_providers.create!(session_data) if session_data.values.all?
     sign_in user, event: :authentication

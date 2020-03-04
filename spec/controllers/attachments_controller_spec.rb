@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe AttachmentsController, type: :controller do
@@ -6,14 +8,12 @@ RSpec.describe AttachmentsController, type: :controller do
   let(:question) { create(:question, user: user) }
 
   describe 'DELETE #destroy' do
-
     before do
       sign_in(user)
       question.files.attach(create_file_blob)
     end
 
     context 'As author' do
-
       it 'deletes attachment' do
         expect { delete :destroy, params: { id: question.files.first }, format: :js }.to change(question.files, :count).by(-1)
       end
@@ -22,11 +22,9 @@ RSpec.describe AttachmentsController, type: :controller do
         delete :destroy, params: { id: question.files.first }, format: :js
         expect(response).to render_template :destroy
       end
-
     end
 
     context 'As not author' do
-
       before { sign_in(user2) }
 
       it 'do not deletes attachment' do
@@ -40,7 +38,6 @@ RSpec.describe AttachmentsController, type: :controller do
     end
 
     context 'As guest' do
-
       before { sign_out(user) }
 
       it 'do not deletes attachment' do
@@ -53,6 +50,4 @@ RSpec.describe AttachmentsController, type: :controller do
       end
     end
   end
-
-
 end

@@ -1,11 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-feature 'Authorization with OAuth providers', %q{
+feature 'Authorization with OAuth providers', '
 In order to sign in or sign up
 As a user or guest
 I want to be able to sign in or sign up with my social network accounts
-} do
-
+' do
   background { visit new_user_session_path }
 
   describe 'Sign in with Github' do
@@ -39,8 +40,8 @@ I want to be able to sign in or sign up with my social network accounts
       expect(page).to have_content "Email can't be blank"
       fill_in 'email', with: 'test'
       click_on 'Confirm'
-      expect(page).to have_content "Email is invalid"
-      expect(page).to have_content "Email must be a valid email format"
+      expect(page).to have_content 'Email is invalid'
+      expect(page).to have_content 'Email must be a valid email format'
     end
   end
 
@@ -75,8 +76,8 @@ I want to be able to sign in or sign up with my social network accounts
       expect(page).to have_content "Email can't be blank"
       fill_in 'email', with: 'test'
       click_on 'Confirm'
-      expect(page).to have_content "Email is invalid"
-      expect(page).to have_content "Email must be a valid email format"
+      expect(page).to have_content 'Email is invalid'
+      expect(page).to have_content 'Email must be a valid email format'
     end
   end
 end

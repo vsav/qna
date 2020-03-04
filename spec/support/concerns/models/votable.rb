@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.shared_examples_for Votable do
@@ -11,7 +13,6 @@ RSpec.shared_examples_for Votable do
   let!(:vote2) { create(:vote, :dislike, user: user3, votable: votable) }
 
   describe 'users can vote' do
-
     describe '#total_votes' do
       it 'calculate votable total rating' do
         expect(votable.total_rating).to eq 0
@@ -35,13 +36,11 @@ RSpec.shared_examples_for Votable do
     end
 
     describe '#dislike?' do
-
       it 'changes votable rating by -1' do
         expect(votable.total_rating).to eq 0
         votable.dislike!(user4)
-        expect(votable.total_rating).to eq -1
+        expect(votable.total_rating).to eq(-1)
       end
     end
-
   end
 end

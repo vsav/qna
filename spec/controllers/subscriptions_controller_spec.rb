@@ -1,14 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe SubscriptionsController, type: :controller do
-
   let(:user) { create :user }
   let(:question) { create :question }
-  let(:subscribe) { post :create, params: { question_id: question.id }, format: :js}
+  let(:subscribe) { post :create, params: { question_id: question.id }, format: :js }
   let(:unsubscribe) { delete :destroy, params: { id: question.subscriptions.find_by(user_id: user.id) }, format: :js }
 
   describe 'POST #create' do
-
     context 'Authenticated user' do
       before { login(user) }
 
@@ -28,7 +28,6 @@ RSpec.describe SubscriptionsController, type: :controller do
     end
 
     context 'Unauthenticated user' do
-
       it 'not saves a new subscription to database' do
         expect { subscribe }.to_not change(question.subscriptions, :count)
       end
@@ -41,11 +40,9 @@ RSpec.describe SubscriptionsController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-
     let(:question) { create :question, user: user }
 
     context 'Authenticated user' do
-
       before { login(user) }
 
       it 'deletes subscription for question' do
@@ -59,7 +56,6 @@ RSpec.describe SubscriptionsController, type: :controller do
     end
 
     context 'Unauthenticated user' do
-
       it 'not deletes subscription for question' do
         expect { unsubscribe }.to_not change(question.subscriptions, :count)
       end
