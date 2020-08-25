@@ -1,24 +1,37 @@
-# README
+# QnA (Questions and Answers)
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Учебный проект онлайн школы Thinknetica в рамках программы "Профессиональная разработка на Ruby on Rails".
 
-Things you may want to cover:
+Приложение позволяет:
+* Задавать вопросы
+* Отвечать на вопросы других пользователей
+* Оставлять комментарии к вопросам и ответам.
+* Голосовать за вопросы и ответы ( like / dislike )
+* Выбирать лучший ответ к своему вопросу
+* Назначать "награду" к своему вопросу, которую получает пользователь, чей ответ выбран как лучший
+* Прикреплять ссылки и изображения (AWS)
+* Авторизоваться через Github и VKontakte (OAuth)
+* Полнотекстовый поиск (Thinking-Sphynx)
+* Подписаться на ежедневный дайджест вопросов и ответов и получать их на email
 
-* Ruby version
+При создании приложения были использованы:
 
-* System dependencies
+* Ruby 2.6.5
 
-* Configuration
+* Rails 6.0
 
-* Database creation
+* Postgresql
 
-* Database initialization
+* Devise
 
-* How to run the test suite
+* CanCanCan, Doorkeeper
 
-* Services (job queues, cache servers, search engines, etc.)
+* Slim, Bootstrap, Gon
 
-* Deployment instructions
+* Sidekiq, Whenever
 
-* ...
+* Redis
+
+Тестирование:
+
+RSpec, Capybara, Shoulda-matchers
