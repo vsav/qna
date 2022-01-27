@@ -41,7 +41,7 @@ gem 'omniauth'
 gem 'omniauth-github'
 gem 'omniauth-vkontakte'
 gem 'redis-rails'
-gem 'sidekiq', '< 6'
+gem 'sidekiq', '< 7'
 gem 'sinatra', require: false
 gem 'slim-rails'
 gem 'thinking-sphinx'
